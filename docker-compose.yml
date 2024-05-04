@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  node-app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: textMe
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/1.sql
+    command: --init-file /docker-entrypoint-initdb.d/1.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: database
+
+volumes:
+  database:
+    driver: local
+    driver_opts:
+      type: none
+      device: writable/db_data
+      o: bind
