@@ -23,7 +23,10 @@ app.use(router);
 io.on("connection", (socket) => {
   console.log("Connection completed");
 
-  socket.emit("message", "HOliiiiiiii");
+  socket.on("sendMessage", (message) => {
+    console.log("mensaje recibido:", JSON.stringify(message));
+    io.emit("message", message);
+  });
 });
 
 const port = process.env.PORT || 3000;
