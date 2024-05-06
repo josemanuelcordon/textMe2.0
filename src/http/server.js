@@ -11,13 +11,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
   },
 });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "client")));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+);
 app.use(router);
 
 io.on("connection", (socket) => {

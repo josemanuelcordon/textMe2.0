@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const App = () => {
+const Chat = () => {
   const [message, setMessage] = useState({});
-  const [messages, setMessages] = useState<Array<string>>([]);
+  const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -51,4 +51,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Chat;
