@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import messageService from "../../service/messageService";
 
 const Chat = () => {
   const [message, setMessage] = useState({});
@@ -33,8 +34,14 @@ const Chat = () => {
   };
 
   const sendMessage = () => {
+    const messageToSend = {
+      content: message.content,
+      sender: 1,
+      date: new Date(),
+    };
+    messageService.sendMessage(messageToSend);
     if (socket) {
-      socket.emit("sendMessage", message.content);
+      socket.emit("sendMessage", messageToSend.content);
     }
   };
 

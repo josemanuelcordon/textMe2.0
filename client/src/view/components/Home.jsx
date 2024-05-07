@@ -1,15 +1,16 @@
 // Home.js
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Chat from "./Chat";
 
 const Home = () => {
   const { phone, logout } = useAuth();
 
+  useEffect(() => {
+    console.log(phone);
+  }, [phone]);
   return (
     <div>
-      <h2>Welcome, {phone ? phone : "Guest"}</h2>
-      {phone && <button onClick={logout}>Logout</button>}
       <Chat />
     </div>
   );
