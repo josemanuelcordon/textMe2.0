@@ -13,7 +13,7 @@ const authUser = async (telephone, password) => {
   });
 
   const data = await response.json();
-  return data.access;
+  return data;
 };
 
 export default {

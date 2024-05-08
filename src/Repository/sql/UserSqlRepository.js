@@ -10,7 +10,16 @@ const getUser = async (telephone, password) => {
   ]);
 
   dbConnection.end();
-  return results.length > 0;
+  return results[0];
 };
 
-export default { getUser };
+const getUsersByTelephone = async (telephone) => {
+  const query = "SELECT * FROM `users` WHERE `phone` = ?";
+  const dbConnection = await mysql.connect();
+
+  const [results, fields] = await dbConnection.query(query, [telephone]);
+  dbConnection.end();
+  return results;
+};
+
+export default { getUser, getUsersByTelephone };
