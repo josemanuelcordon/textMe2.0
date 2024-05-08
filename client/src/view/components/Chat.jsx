@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import messageService from "../../service/messageService";
+import { useAuth } from "../context/AuthContext";
 
 const Chat = () => {
   const [message, setMessage] = useState({});
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Conectarse al servidor WebSocket
@@ -36,23 +38,25 @@ const Chat = () => {
   const sendMessage = () => {
     const messageToSend = {
       content: message.content,
-      sender: 1,
+      sender: user.id,
       date: new Date(),
     };
     messageService.sendMessage(messageToSend);
     if (socket) {
       socket.emit("sendMessage", messageToSend.content);
     }
+    // Vaciar el texto del textarea después de enviar el mensaje
+    setMessage({ ...message, content: "" });
   };
 
   return (
     <>
       <ul>
-        {messages.map((message) => (
-          <li>{message}</li>
+        {messages.map((message, index) => (
+          <li key={index}>{message}</li>
         ))}
       </ul>
-      <textarea onChange={fillMessage}></textarea>
+      <textarea value={message.content || ""} onChange={fillMessage}></textarea>
       <button onClick={sendMessage}>Enviar</button>
     </>
   );

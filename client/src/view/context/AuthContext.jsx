@@ -4,22 +4,23 @@ import UserRepository from "../../repository/UserRepository";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [phone, setPhone] = useState();
+  const [user, setUser] = useState();
 
   const login = async (userData) => {
-    const access = await UserRepository.authUser(
+    const userLogin = await UserRepository.authUser(
       userData.telephone,
       userData.password
     );
-    if (access) setPhone(userData);
+    console.log(userLogin);
+    if (userLogin) setUser(userLogin);
   };
 
   const logout = () => {
-    setPhone(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ phone, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

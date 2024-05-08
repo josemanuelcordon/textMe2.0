@@ -2,9 +2,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ redirectPath }) => {
-  const { phone } = useAuth();
+  const { user } = useAuth();
 
-  return phone ? <Outlet /> : <Navigate to={redirectPath} replace />;
+  return user ? <Outlet /> : <Navigate to={redirectPath} replace />;
 };
 
 export default ProtectedRoute;
