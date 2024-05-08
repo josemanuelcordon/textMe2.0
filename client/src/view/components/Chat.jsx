@@ -18,6 +18,8 @@ const Chat = () => {
       console.log("Conectado al servidor WebSocket");
     });
 
+    newSocket.emit("subscribeToChats", user.id);
+
     newSocket.on("message", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });

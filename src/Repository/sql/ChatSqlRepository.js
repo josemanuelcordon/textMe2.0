@@ -11,7 +11,7 @@ const getUserChats = async (userId) => {
     const dbConnection = await mysql.connect();
     const [rows, fields] = await dbConnection.execute(query, [userId]);
     dbConnection.end();
-    return rows;
+    return rows ?? [];
   } catch (error) {
     console.log(error);
     return [];

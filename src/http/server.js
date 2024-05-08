@@ -5,6 +5,8 @@ import path from "path";
 import { Server } from "socket.io";
 import router from "./router.js";
 
+import ChatService from "../Service/ChatService.js";
+
 const __dirname = path.resolve();
 
 const app = express();
@@ -28,6 +30,14 @@ app.use(router);
 
 io.on("connection", (socket) => {
   console.log("Connection completed");
+
+  socket.on("subscribeToChats", async (userId) => {
+    const userChats = await ChatService.getUserChats(userId);
+    userChats.forEach((chat) => {
+      socket.join(`chat-${chat.id}`);
+      console.log(`Usuario unido a la sala ${chat.id}`);
+    });
+  });
 
   socket.on("sendMessage", (message) => {
     console.log("mensaje recibido:", JSON.stringify(message));
