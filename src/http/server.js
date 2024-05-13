@@ -6,6 +6,9 @@ import { Server } from "socket.io";
 import router from "./router.js";
 
 import ChatService from "../Service/ChatService.js";
+import UserService from "../Service/UserService.js";
+
+const userSockets = new Map();
 
 const __dirname = path.resolve();
 
@@ -32,6 +35,9 @@ io.on("connection", (socket) => {
   console.log("Connection completed");
 
   socket.on("subscribeToChats", async (userId) => {
+    const userSocketsIds = userSockets.get(userId) ?? [];
+    userSockets.set(userId, [...userSocketsIds, socket.id]);
+
     const userChats = await ChatService.getUserChats(userId);
     userChats.forEach((chat) => {
       socket.join(`chat-${chat.id}`);
@@ -39,9 +45,32 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("sendMessage", (message) => {
-    console.log("mensaje recibido:", JSON.stringify(message));
-    io.emit("message", message);
+  socket.on("sendMessage", async (message) => {
+    const receivers = await UserService.getUserIdsByChat(message.chat);
+    console.log(receivers);
+    receivers.forEach((receiver) => {
+      const receiverSocketIds = userSockets.get(receiver.id_user) ?? [];
+
+      receiverSocketIds.forEach((receiverSocketId) => {
+        io.sockets.sockets.get(receiverSocketId).join(`chat-${message.chat}`);
+      });
+    });
+
+    io.in(`chat-${message.chat}`).emit("message", message);
+  });
+
+  socket.on("disconnect", () => {
+    const disconnectedSocketId = socket.id;
+    userSockets.forEach((sockets, userId) => {
+      const index = sockets.indexOf(disconnectedSocketId);
+      if (index !== -1) {
+        sockets.splice(index, 1);
+        if (sockets.length === 0) {
+          userSockets.delete(userId);
+        }
+      }
+    });
+    console.log("Socket disconnected");
   });
 });
 

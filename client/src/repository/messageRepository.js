@@ -10,6 +10,13 @@ const sendMessage = async (message) => {
   return response.ok;
 };
 
+const getChatMessages = async (chatId) => {
+  const response = await fetch(`http://localhost:3000/messages/${chatId}`);
+  const data = await response.json();
+  return data;
+};
+
 export default {
   sendMessage,
+  getChatMessages,
 };
