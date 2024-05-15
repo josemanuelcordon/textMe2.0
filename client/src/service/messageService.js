@@ -8,7 +8,12 @@ const getChatMessages = async (chatId) => {
   return await messageRepository.getChatMessages(chatId);
 };
 
+const readMessages = async (chatId, userId) => {
+  await messageRepository.readMessages(chatId, userId);
+};
+
 export default {
   sendMessage,
   getChatMessages,
+  readMessages,
 };

@@ -16,7 +16,17 @@ const getChatMessages = async (chatId) => {
   return data;
 };
 
+const readMessages = async (chatId, userId) => {
+  const response = await fetch(
+    `http://localhost:3000/read/${chatId}/${userId}`,
+    {
+      method: "POST",
+    }
+  );
+};
+
 export default {
   sendMessage,
   getChatMessages,
+  readMessages,
 };

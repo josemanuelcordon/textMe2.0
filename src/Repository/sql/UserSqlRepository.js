@@ -31,9 +31,9 @@ const getUserIdsByChat = async (chatId) => {
   return results;
 };
 
-const getUserNameByChat = async (chatId, userId) => {
+const getUserInfoByChat = async (chatId, userId) => {
   const query =
-    "SELECT name FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ? AND id_user != ?";
+    "SELECT name, phone FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ? AND id_user != ?";
   const dbConnection = await mysql.connect();
 
   const [results, fields] = await dbConnection.query(query, [chatId, userId]);
@@ -46,5 +46,5 @@ export default {
   getUser,
   getUsersByTelephone,
   getUserIdsByChat,
-  getUserNameByChat,
+  getUserInfoByChat,
 };

@@ -16,7 +16,18 @@ const getChatMessages = (chatId) => {
   return messages;
 };
 
+const getMessageInfoByChat = async (chatId) => {
+  const messageInfo = await messageRepository.getMessageInfoByChat(chatId);
+  return messageInfo;
+};
+
+const readMessages = async (chatId, userId) => {
+  messageRepository.readMessages(chatId, userId);
+};
+
 export default {
   saveMessage,
   getChatMessages,
+  getMessageInfoByChat,
+  readMessages,
 };

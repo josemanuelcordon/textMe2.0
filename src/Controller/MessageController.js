@@ -24,7 +24,16 @@ const getChatMessages = async (req, res) => {
   }
 };
 
+const readMessages = async (req, res) => {
+  const chatId = req.params.chatId;
+  const userId = req.params.userId;
+
+  MessageService.readMessages(chatId, userId);
+  res.status(200);
+};
+
 export default {
   saveMessage,
   getChatMessages,
+  readMessages,
 };

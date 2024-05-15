@@ -7,6 +7,7 @@ import router from "./router.js";
 
 import ChatService from "../Service/ChatService.js";
 import UserService from "../Service/UserService.js";
+import MessageService from "../Service/MessageService.js";
 
 const userSockets = new Map();
 
@@ -45,12 +46,17 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("readMessages", async ({ chat, user }) => {
+    console.log("mensajes leidos");
+    MessageService.readMessages(chat, user);
+  });
+
   socket.on("sendMessage", async (message) => {
     const receivers = await UserService.getUserIdsByChat(message.chat);
-    console.log(receivers);
+    console.log("Mensaje", message);
     receivers.forEach((receiver) => {
       const receiverSocketIds = userSockets.get(receiver.id_user) ?? [];
-
+      console.log(receiverSocketIds);
       receiverSocketIds.forEach((receiverSocketId) => {
         io.sockets.sockets.get(receiverSocketId).join(`chat-${message.chat}`);
       });

@@ -8,12 +8,12 @@ const getUserIdsByChat = async (chatId) => {
   return (await UserRepository.getUserIdsByChat(chatId)) ?? [];
 };
 
-const getUserNameByChat = async (chatId, userId) => {
-  return await UserRepository.getUserNameByChat(chatId, userId);
+const getUserInfoByChat = async (chatId, userId) => {
+  return await UserRepository.getUserInfoByChat(chatId, userId);
 };
 
 export default {
   getUsersByTelephone,
   getUserIdsByChat,
-  getUserNameByChat,
+  getUserInfoByChat,
 };

@@ -17,5 +17,6 @@ router.get("/messages/:chatId", MessageController.getChatMessages);
 router.get("/chats/:userId", ChatController.getUserChats);
 
 router.get("/user", UserController.getUsersByTelephone);
+router.post("/read/:chatId/:userId", MessageController.readMessages);
 
 export default router;

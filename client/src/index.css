@@ -1,14 +1,10 @@
 body {
-  padding: 100px;
+  padding: 80px;
   height: 100vh;
 }
 
-main {
-  height: ;
-}
-
 .page--template {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 160px);
 }
 
 .chat--list {
@@ -17,7 +13,7 @@ main {
 
 .chat--container {
   position: relative;
-  height: 100%;
+  height: calc(100vh - 208px);
   display: flex;
   flex-direction: column;
 }
@@ -53,4 +49,30 @@ main {
   margin-top: 10px;
   display: flex;
   align-items: center;
+}
+
+.chat {
+  display: flex;
+  gap: 16px;
+}
+
+.chat-image--section > img {
+  border-radius: 50%;
+  height: 60px;
+  border: 1px solid grey;
+}
+
+.chat-info--section {
+  display: flex;
+  flex-direction: column;
+}
+
+.unread-messages--icon {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  background-color: green;
+  color: white;
 }

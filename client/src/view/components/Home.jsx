@@ -5,44 +5,64 @@ import Chat from "./Chat";
 import ChatList from "./ChatList";
 import { io } from "socket.io-client";
 import { Column, Grid, ExpandableSearch } from "@carbon/react";
+import messageService from "../../service/messageService";
+
+let socket;
 
 const Home = () => {
-  const [socket, setSocket] = useState(null);
   const [chat, setChat] = useState(null);
   const [chats, setChats] = useState([]);
+  const [messages, setMessages] = useState([]);
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    const newSocket = io("ws://localhost:3000");
-    setSocket(newSocket);
-
-    newSocket.on("connect", () => {
-      console.log("Conectado al servidor WebSocket");
-      newSocket.emit("subscribeToChats", user.id);
+    socket = io("ws://localhost:3000");
+    socket.on("connect", () => {
+      console.log("Conectado al servidor WebSocket", socket);
+      socket.emit("subscribeToChats", user.id);
     });
+    return () => {
+      socket.disconnect();
+    };
+  }, [user]);
 
-    newSocket.on("message", (message) => {
-      // Buscar el chat en el array chats con el mismo ID que message.chat
+  useEffect(() => {
+    const messageHandler = (message) => {
+      if (message.chat === chat?.id) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+        messageService.readMessages(chat.id, user.id);
+      }
+      console.log(chats);
       const chatIndex = chats.findIndex((chat) => chat.id === message.chat);
-      // Si se encuentra el chat en el array
+
       if (chatIndex !== -1) {
-        // Obtener el chat y eliminarlo del array
-        const chat = chats.splice(chatIndex, 1)[0];
-        // Insertar el chat al principio del array
-        const chatCopy = chats;
-        chatCopy.unshift(chat);
-        console.log(chatCopy);
-        setChats([...chatCopy]);
-        console.log(`Chat with ID ${chat.id} moved to the top of the list`);
+        const updatedChats = [...chats];
+
+        const chatToUpdate = updatedChats[chatIndex];
+
+        chatToUpdate.lastMessage = message.content;
+        if (message.sender !== user.id && chat.id !== message.chat) {
+          chatToUpdate.unreadMessages += 1;
+        }
+
+        updatedChats.splice(chatIndex, 1);
+        updatedChats.unshift(chatToUpdate);
+
+        setChats(updatedChats);
+
+        console.log(
+          `Chat with ID ${chatToUpdate.id} updated and moved to the top of the list`
+        );
       } else {
         console.log(`Chat with ID ${message.chat} not found`);
       }
-    });
+    };
+    socket.on("message", messageHandler);
 
     return () => {
-      newSocket.disconnect();
+      socket.off("message");
     };
-  }, [user]);
+  }, [chat, socket, chats]);
 
   return (
     <Grid className="page--template">
@@ -57,24 +77,25 @@ const Home = () => {
         />
       </Column>
       <Column lg={4}>
-        {socket && (
-          <ChatList
-            chats={chats}
-            setChats={setChats}
-            setChat={setChat}
-            socket={socket}
-          />
-        )}
+        <ChatList
+          user={user}
+          chats={chats}
+          setChats={setChats}
+          setChat={setChat}
+        />
       </Column>
       <Column lg={12}>
         <main className="chat--container">
           {chat && (
             <Chat
               user={user}
+              messages={messages}
               chat={chat}
+              setChat={setChat}
               socket={socket}
               chats={chats}
               setChats={setChats}
+              setMessages={setMessages}
             />
           )}
         </main>

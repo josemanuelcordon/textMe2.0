@@ -3,9 +3,16 @@ import messageService from "../../service/messageService";
 import { Button, TextArea } from "@carbon/react";
 import { SendFilled } from "@carbon/icons-react";
 
-const Chat = ({ user, chat, socket, chats, setChats }) => {
+const Chat = ({
+  user,
+  chat,
+  socket,
+  chats,
+  setChats,
+  messages,
+  setMessages,
+}) => {
   const [message, setMessage] = useState({});
-  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -15,32 +22,20 @@ const Chat = ({ user, chat, socket, chats, setChats }) => {
 
     getMessages();
 
-    //TODO: Esto va a cambiar
-    socket.on("message", (message) => {
-      if (message.chat === chat.id) {
-        setMessages((prevMessages) => [...prevMessages, message]);
+    socket.emit("readMessages", { chat: chat.id, user: user.id });
+
+    const chatsRead = chats.map((ch) => {
+      if (ch.id === chat.id) {
+        return {
+          ...ch,
+          unreadMessages: 0,
+        };
       }
-      // Buscar el chat en el array chats con el mismo ID que message.chat
-      const chatIndex = chats.findIndex((chat) => chat.id === message.chat);
-      // Si se encuentra el chat en el array
-      if (chatIndex !== -1) {
-        // Obtener el chat y eliminarlo del array
-        const chat = chats.splice(chatIndex, 1)[0];
-        // Insertar el chat al principio del array
-        const chatCopy = chats;
-        chatCopy.unshift(chat);
-        console.log(chatCopy);
-        setChats([...chatCopy]);
-        console.log(`Chat with ID ${chat.id} moved to the top of the list`);
-      } else {
-        console.log(`Chat with ID ${message.chat} not found`);
-      }
+      return ch;
     });
 
-    return () => {
-      socket.off("message");
-    };
-  }, [socket, chat]);
+    setChats(chatsRead);
+  }, [chat]);
 
   const fillMessage = (e) => {
     setMessage({ ...message, content: e.target.value });
