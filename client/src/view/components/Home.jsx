@@ -4,15 +4,30 @@ import { useAuth } from "../context/AuthContext";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
 import { io } from "socket.io-client";
-import { Column, Grid, ExpandableSearch } from "@carbon/react";
+import {
+  Column,
+  Grid,
+  ExpandableSearch,
+  Button,
+  OverflowMenu,
+  OverflowMenuItem,
+} from "@carbon/react";
+import { Filter } from "@carbon/icons-react";
+
 import messageService from "../../service/messageService";
+import ModalContainer from "./ModalContainer";
+import ChatService from "../../service/ChatService";
+import GroupModalContainer from "./GroupModalContainer";
 
 let socket;
 
 const Home = () => {
   const [chat, setChat] = useState(null);
   const [chats, setChats] = useState([]);
+  const [sortedChats, setSortedChats] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const { user, logout } = useAuth();
 
   useEffect(() => {
@@ -27,10 +42,11 @@ const Home = () => {
   }, [user]);
 
   useEffect(() => {
-    const messageHandler = (message) => {
+    const messageHandler = async (message) => {
+      console.log(message);
       if (message.chat === chat?.id) {
         setMessages((prevMessages) => [...prevMessages, message]);
-        messageService.readMessages(chat.id, user.id);
+        await messageService.readMessages(chat.id, user.id);
       }
       console.log(chats);
       const chatIndex = chats.findIndex((chat) => chat.id === message.chat);
@@ -41,7 +57,7 @@ const Home = () => {
         const chatToUpdate = updatedChats[chatIndex];
 
         chatToUpdate.lastMessage = message.content;
-        if (message.sender !== user.id && chat.id !== message.chat) {
+        if (message.sender !== user.id && chat?.id !== message.chat) {
           chatToUpdate.unreadMessages += 1;
         }
 
@@ -54,7 +70,9 @@ const Home = () => {
           `Chat with ID ${chatToUpdate.id} updated and moved to the top of the list`
         );
       } else {
-        console.log(`Chat with ID ${message.chat} not found`);
+        const chatsUpdated = await ChatService.getUserChats(user.id);
+        console.log(chatsUpdated);
+        setChats(chatsUpdated);
       }
     };
     socket.on("message", messageHandler);
@@ -64,22 +82,57 @@ const Home = () => {
     };
   }, [chat, socket, chats]);
 
+  const handleSearch = (e) => {
+    const chatName = e.target.value.toLowerCase();
+
+    setSortedChats(() => {
+      if (chatName !== "") {
+        // Crear una copia del array de chats y ordenar
+        const sortedChats = [...chats].sort((a, b) => {
+          const aMatches = a.name.toLowerCase().includes(chatName);
+          const bMatches = b.name.toLowerCase().includes(chatName);
+          if (aMatches && !bMatches) return -1;
+          if (!aMatches && bMatches) return 1;
+          return 0;
+        });
+        return sortedChats;
+      } else {
+        // Si no hay valor de búsqueda, devolver el array original
+        return chats;
+      }
+    });
+  };
+
   return (
     <Grid className="page--template">
-      <Column lg={16}>
+      <Column lg={4}>
         <ExpandableSearch
           size="lg"
           labelText="Search"
           closeButtonLabelText="Clear search input"
           id="search-expandable-1"
-          onChange={() => {}}
-          onKeyDown={() => {}}
+          onChange={handleSearch}
         />
+      </Column>
+      <Column lg={12} className="options-section">
+        <OverflowMenu renderIcon={Filter}>
+          <OverflowMenuItem itemText="Ver Perfil" />
+          <OverflowMenuItem
+            onClick={() => setOpen(true)}
+            itemText="Buscar Amigos"
+          />
+          <OverflowMenuItem
+            onClick={() => setOpen2(true)}
+            itemText="Crear Grupo"
+          />
+        </OverflowMenu>
       </Column>
       <Column lg={4}>
         <ChatList
           user={user}
           chats={chats}
+          chat={chat}
+          sortedChats={sortedChats}
           setChats={setChats}
           setChat={setChat}
         />
@@ -98,6 +151,22 @@ const Home = () => {
               setMessages={setMessages}
             />
           )}
+          <ModalContainer
+            open={open}
+            setOpen={setOpen}
+            setChat={setChat}
+            user={user}
+            socket={socket}
+            setChats={setChats}
+          />
+          <GroupModalContainer
+            open={open2}
+            setOpen={setOpen2}
+            setChat={setChat}
+            user={user}
+            socket={socket}
+            setChats={setChats}
+          />
         </main>
       </Column>
     </Grid>

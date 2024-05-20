@@ -10,18 +10,17 @@ const sendMessage = async (message) => {
   return response.ok;
 };
 
-const getChatMessages = async (chatId) => {
-  const response = await fetch(`http://localhost:3000/messages/${chatId}`);
+const getChatMessages = async (chatId, userId) => {
+  const response =
+    await fetch(`http://localhost:3000/messages/${chatId}/${userId}
+  }`);
   const data = await response.json();
   return data;
 };
 
 const readMessages = async (chatId, userId) => {
   const response = await fetch(
-    `http://localhost:3000/read/${chatId}/${userId}`,
-    {
-      method: "POST",
-    }
+    `http://localhost:3000/read/${chatId}/${userId}`
   );
 };
 

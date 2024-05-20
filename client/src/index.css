@@ -9,6 +9,7 @@ body {
 
 .chat--list {
   overflow-y: scroll;
+  height: calc(100vh - 208px);
 }
 
 .chat--container {
@@ -54,6 +55,14 @@ body {
 .chat {
   display: flex;
   gap: 16px;
+  border: 1px solid grey;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.selected {
+  background-color: #c0bcbc;
+  border: 1px solid black;
 }
 
 .chat-image--section > img {
@@ -75,4 +84,30 @@ body {
   place-content: center;
   background-color: green;
   color: white;
+}
+
+.cds--modal-close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: #0043ce;
+  cursor: pointer;
+}
+
+.friend--list {
+  height: 400px;
+  padding-top: 16px;
+  list-style: none;
+}
+
+.group-tag {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.options-section {
+  display: flex;
+  align-items: center;
+  justify-content: end;
 }

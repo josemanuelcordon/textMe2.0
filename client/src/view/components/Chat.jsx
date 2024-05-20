@@ -16,12 +16,14 @@ const Chat = ({
 
   useEffect(() => {
     const getMessages = async () => {
-      const messagesResponse = await messageService.getChatMessages(chat.id);
+      const messagesResponse = await messageService.getChatMessages(
+        chat.id,
+        user.id
+      );
       setMessages(messagesResponse);
     };
 
     getMessages();
-
     socket.emit("readMessages", { chat: chat.id, user: user.id });
 
     const chatsRead = chats.map((ch) => {

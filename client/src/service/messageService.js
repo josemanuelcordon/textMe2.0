@@ -4,8 +4,8 @@ const sendMessage = async (message) => {
   await messageRepository.sendMessage(message);
 };
 
-const getChatMessages = async (chatId) => {
-  return await messageRepository.getChatMessages(chatId);
+const getChatMessages = async (chatId, userId) => {
+  return await messageRepository.getChatMessages(chatId, userId);
 };
 
 const readMessages = async (chatId, userId) => {
