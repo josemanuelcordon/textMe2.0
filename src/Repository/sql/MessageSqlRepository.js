@@ -14,7 +14,7 @@ const saveMessage = async (message) => {
       now,
       message.content,
     ]);
-    dbConnection.end();
+    await dbConnection.end();
     return true;
   } catch (error) {
     console.log(error);
@@ -24,10 +24,12 @@ const saveMessage = async (message) => {
 
 const getChatMessages = async (chatId) => {
   const query = "SELECT * FROM `message` WHERE `chat` = ?";
+  console.log("A");
   try {
     const dbConnection = await mysql.connect();
     const [rows, _] = await dbConnection.query(query, [chatId]);
-    dbConnection.end();
+    await dbConnection.end();
+    console.log(rows);
     if (rows.length === 0) {
       return [];
     } else {
@@ -39,19 +41,22 @@ const getChatMessages = async (chatId) => {
   }
 };
 
-const getMessageInfoByChat = async (chatId) => {
+const getMessageInfoByChat = async (chatId, userId) => {
   const contentQuery =
     "SELECT content FROM `message` WHERE `chat` = ? ORDER BY date DESC";
   const unreadMessagesQuery =
-    "SELECT COUNT(*) AS unreadMessages FROM `message` WHERE `chat` = ? AND is_read = 0";
+    "SELECT COUNT(*) AS unreadMessages FROM `message` WHERE `chat` = ? AND is_read = 0 AND sender != ?";
   const result = {};
   const dbConnection = await mysql.connect();
   const [rows] = await dbConnection.query(contentQuery, [chatId]);
   console.log(rows);
   result.content = rows[0]?.content ?? "";
-  const [rows2] = await dbConnection.query(unreadMessagesQuery, [chatId]);
+  const [rows2] = await dbConnection.query(unreadMessagesQuery, [
+    chatId,
+    userId,
+  ]);
   result.unreadMessages = rows2[0]?.unreadMessages;
-  dbConnection.end();
+  await dbConnection.end();
   return result;
 };
 
@@ -61,7 +66,7 @@ const readMessages = async (chatId, userId) => {
   try {
     const dbConnection = await mysql.connect();
     const [rows, _] = await dbConnection.execute(query, [chatId, userId]);
-    dbConnection.end();
+    await dbConnection.end();
   } catch (error) {
     console.log(error);
   }

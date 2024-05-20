@@ -14,9 +14,9 @@ const saveMessage = async (req, res) => {
 
 const getChatMessages = async (req, res) => {
   const chatId = req.params.chatId;
+  const userId = req.params.userId;
 
-  const messages = await MessageService.getChatMessages(chatId);
-  console.log(messages);
+  const messages = await MessageService.getChatMessages(chatId, userId);
   if (messages.length > 0) {
     res.status(200).json(messages);
   } else {
@@ -27,9 +27,8 @@ const getChatMessages = async (req, res) => {
 const readMessages = async (req, res) => {
   const chatId = req.params.chatId;
   const userId = req.params.userId;
-
-  MessageService.readMessages(chatId, userId);
-  res.status(200);
+  await MessageService.readMessages(chatId, userId);
+  res.status(200).json([]);
 };
 
 export default {

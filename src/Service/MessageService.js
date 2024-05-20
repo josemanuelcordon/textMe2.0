@@ -11,18 +11,21 @@ const saveMessage = async (sender, content, date, chat) => {
   await messageRepository.saveMessage(message);
 };
 
-const getChatMessages = (chatId) => {
-  const messages = messageRepository.getChatMessages(chatId);
+const getChatMessages = async (chatId) => {
+  const messages = await messageRepository.getChatMessages(chatId);
   return messages;
 };
 
-const getMessageInfoByChat = async (chatId) => {
-  const messageInfo = await messageRepository.getMessageInfoByChat(chatId);
+const getMessageInfoByChat = async (chatId, userId) => {
+  const messageInfo = await messageRepository.getMessageInfoByChat(
+    chatId,
+    userId
+  );
   return messageInfo;
 };
 
 const readMessages = async (chatId, userId) => {
-  messageRepository.readMessages(chatId, userId);
+  await messageRepository.readMessages(chatId, userId);
 };
 
 export default {

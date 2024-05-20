@@ -32,8 +32,9 @@ app.use(
 );
 app.use(router);
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("Connection completed");
+  console.log(await UserService.getUserFriends(1));
 
   socket.on("subscribeToChats", async (userId) => {
     const userSocketsIds = userSockets.get(userId) ?? [];
@@ -48,15 +49,14 @@ io.on("connection", (socket) => {
 
   socket.on("readMessages", async ({ chat, user }) => {
     console.log("mensajes leidos");
-    MessageService.readMessages(chat, user);
+    await MessageService.readMessages(chat, user);
   });
 
   socket.on("sendMessage", async (message) => {
+    console.log("Mensaje recibido!");
     const receivers = await UserService.getUserIdsByChat(message.chat);
-    console.log("Mensaje", message);
     receivers.forEach((receiver) => {
       const receiverSocketIds = userSockets.get(receiver.id_user) ?? [];
-      console.log(receiverSocketIds);
       receiverSocketIds.forEach((receiverSocketId) => {
         io.sockets.sockets.get(receiverSocketId).join(`chat-${message.chat}`);
       });

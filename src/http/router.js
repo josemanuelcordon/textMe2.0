@@ -12,11 +12,14 @@ router.get("/", MainController.serveIndex);
 router.post("/login", AuthController.login);
 
 router.post("/send", MessageController.saveMessage);
-router.get("/messages/:chatId", MessageController.getChatMessages);
+router.get("/messages/:chatId/:userId", MessageController.getChatMessages);
+router.get("/read/:chatId/:userId", MessageController.readMessages);
 
 router.get("/chats/:userId", ChatController.getUserChats);
+router.post("/chat/create", ChatController.createChat);
+router.post("/group-chat/create", ChatController.createGroupChat);
 
 router.get("/user", UserController.getUsersByTelephone);
-router.post("/read/:chatId/:userId", MessageController.readMessages);
+router.get("/user/:userId/friends", UserController.getUserFriends);
 
 export default router;
