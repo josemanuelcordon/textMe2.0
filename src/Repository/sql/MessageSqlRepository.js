@@ -23,17 +23,33 @@ const saveMessage = async (message) => {
 };
 
 const getChatMessages = async (chatId) => {
-  const query = "SELECT * FROM `message` WHERE `chat` = ?";
+  const query =
+    "SELECT * FROM `message` AS m JOIN `users` AS u ON u.id = m.sender WHERE `chat` = ?";
   console.log("A");
   try {
     const dbConnection = await mysql.connect();
     const [rows, _] = await dbConnection.query(query, [chatId]);
     await dbConnection.end();
-    console.log(rows);
     if (rows.length === 0) {
       return [];
     } else {
-      return rows;
+      const mappedRows = rows.map((message) => {
+        return {
+          id: message.id,
+          sender: message.sender,
+          chat: message.chat,
+          content: message.content,
+          date: message.date,
+          is_read: message.is_read,
+          user: {
+            name: message.name,
+            phone: message.phone,
+            email: message.email,
+          },
+        };
+      });
+      console.log("Filas mapeadas", mappedRows);
+      return mappedRows;
     }
   } catch (error) {
     console.log(error);

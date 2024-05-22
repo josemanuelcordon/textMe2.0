@@ -1,8 +1,9 @@
 // Home.js
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import Chat from "./Chat";
-import ChatList from "./ChatList";
+import { useNavigate } from "react-router-dom";
+import Chat from "../components/Chat";
+import ChatList from "../components/ChatList";
 import { io } from "socket.io-client";
 import {
   Column,
@@ -15,9 +16,9 @@ import {
 import { Filter } from "@carbon/icons-react";
 
 import messageService from "../../service/messageService";
-import ModalContainer from "./ModalContainer";
+import ModalContainer from "../components/ModalContainer";
 import ChatService from "../../service/ChatService";
-import GroupModalContainer from "./GroupModalContainer";
+import GroupModalContainer from "../components/GroupModalContainer";
 
 let socket;
 
@@ -29,6 +30,8 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const { user, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket = io("ws://localhost:3000");
@@ -116,7 +119,10 @@ const Home = () => {
       </Column>
       <Column lg={12} className="options-section">
         <OverflowMenu renderIcon={Filter}>
-          <OverflowMenuItem itemText="Ver Perfil" />
+          <OverflowMenuItem
+            onClick={() => navigate("/profile")}
+            itemText="Ver Perfil"
+          />
           <OverflowMenuItem
             onClick={() => setOpen(true)}
             itemText="Buscar Amigos"

@@ -16,9 +16,14 @@ const getUserFriends = async (userId) => {
   return await UserRepository.getUserFriends(userId);
 };
 
+const getChatParticipantsExceptMe = async (chatId, userId) => {
+  return await UserRepository.getChatParticipantsExceptMe(chatId, userId);
+};
+
 export default {
   getUsersByTelephone,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,
+  getChatParticipantsExceptMe,
 };

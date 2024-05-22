@@ -20,6 +20,7 @@ const Chat = ({
         chat.id,
         user.id
       );
+      console.log(messagesResponse);
       setMessages(messagesResponse);
     };
 
@@ -63,14 +64,28 @@ const Chat = ({
     <>
       <ul className="messages--container">
         {messages.map((message, index) => (
-          <li
-            className={`${
-              message.sender === user.id ? "message-sent" : "message-received"
-            } message`}
-            key={index}
-          >
-            {message.content}
-          </li>
+          <>
+            <li
+              className={`message-container ${
+                message.sender === user.id ? "sent" : ""
+              }`}
+              key={index}
+            >
+              <img
+                style={{ width: "42px", height: "42px", borderRadius: "50%" }}
+                src={`http://localhost:3000/uploads/${message.sender}`}
+              />
+              <p
+                className={` ${
+                  message.sender === user.id
+                    ? "message-sent"
+                    : "message-received"
+                } message`}
+              >
+                {message.content}
+              </p>
+            </li>
+          </>
         ))}
       </ul>
       <section className="messages-inputs--container">

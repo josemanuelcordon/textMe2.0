@@ -63,10 +63,22 @@ const getUserFriends = async (userId) => {
   await dbConnection.end();
   return results;
 };
+
+const getChatParticipantsExceptMe = async (chatId, userId) => {
+  const query =
+    "SELECT id_user  FROM `chat_participants` WHERE `id_chat` = ? AND id_user != ?";
+  const dbConnection = await mysql.connect();
+
+  const [results, fields] = await dbConnection.query(query, [chatId, userId]);
+  await dbConnection.end();
+  return results;
+};
+
 export default {
   getUser,
   getUsersByTelephone,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,
+  getChatParticipantsExceptMe,
 };

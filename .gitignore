@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+uploads/*
+
+client/node_modules
+writable
+writable/db_data/*
 
 # Editor directories and files
 .vscode/*
@@ -23,4 +28,3 @@ dist-ssr
 *.sln
 *.sw?
 
-writable/*

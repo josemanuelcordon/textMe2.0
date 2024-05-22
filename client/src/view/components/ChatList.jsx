@@ -26,7 +26,10 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
               onClick={() => openChat(chatToList)}
             >
               <section className="chat-image--section">
-                <img src="/avatar.png" alt={chatToList.name} />
+                <img
+                  style={{ width: "64px" }}
+                  src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                />
               </section>
               <section className="chat-info--section">
                 <h4>{chatToList.name}</h4>
@@ -50,7 +53,10 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
               onClick={() => openChat(chatToList)}
             >
               <section className="chat-image--section">
-                <img src="/avatar.png" alt={chatToList.name} />
+                <img
+                  style={{ width: "64px" }}
+                  src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                />
               </section>
               <section className="chat-info--section">
                 <h4>{chatToList.name}</h4>

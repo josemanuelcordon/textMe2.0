@@ -4,6 +4,8 @@ import AuthController from "../Controller/AuthController.js";
 import MessageController from "../Controller/MessageController.js";
 import ChatController from "../Controller/ChatController.js";
 import UserController from "../Controller/UserController.js";
+import ImageController from "../Controller/ImageController.js";
+import upload from "./uploadMiddleWare.js";
 
 const router = express.Router();
 
@@ -21,5 +23,9 @@ router.post("/group-chat/create", ChatController.createGroupChat);
 
 router.get("/user", UserController.getUsersByTelephone);
 router.get("/user/:userId/friends", UserController.getUserFriends);
+
+router.post("/upload", upload.any(), ImageController.uploadImage);
+router.get("/uploads/:userId", ImageController.getProfileImage);
+router.get("/chat-image/:chatId/:userId", ImageController.getChatImage);
 
 export default router;

@@ -28,6 +28,16 @@ body {
   gap: 16px;
 }
 
+.message-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sent {
+  flex-direction: row-reverse;
+}
+
 .message {
   border-radius: 8px;
   padding: 20px;
@@ -35,12 +45,12 @@ body {
 }
 
 .message-sent {
-  align-self: end;
+  justify-self: end;
   background-color: #0043ce;
 }
 
 .message-received {
-  align-self: start;
+  justify-self: start;
   background-color: #6f6f6f;
 }
 

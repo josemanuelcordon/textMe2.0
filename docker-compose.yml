@@ -7,6 +7,8 @@ services:
       - "3000:3000"
     depends_on:
       - database
+    volumes:
+      - ./:/usr/src/app
 
   database:
     image: mariadb

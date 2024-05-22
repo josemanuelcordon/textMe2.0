@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import { Server } from "socket.io";
 import router from "./router.js";
+import bodyParser from "body-parser";
 
 import ChatService from "../Service/ChatService.js";
 import UserService from "../Service/UserService.js";
@@ -23,7 +24,9 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "client")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "*",
