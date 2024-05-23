@@ -1,14 +1,13 @@
-function User(username, telephone) {
+function User(username) {
   this.username = username;
-  this.telephone = telephone;
   this.image = null;
   this.chats = new Array();
 
-  this.agregarChat = function (chat) {
+  this.addChat = function (chat) {
     this.chats.push(chat);
   };
 
-  this.obtenerChats = function () {
+  this.getChat = function () {
     return this.chats;
   };
 }
