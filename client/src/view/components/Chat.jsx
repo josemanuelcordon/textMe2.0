@@ -73,7 +73,7 @@ const Chat = ({
             >
               <img
                 style={{ width: "42px", height: "42px", borderRadius: "50%" }}
-                src={`http://localhost:3000/uploads/${message.sender}`}
+                src={`http://localhost:3000/profile-image/${message.sender}`}
               />
               <p
                 className={` ${
@@ -95,7 +95,9 @@ const Chat = ({
         ></TextArea>
         <Button
           onClick={sendMessage}
+          className="send-button"
           renderIcon={SendFilled}
+          iconDescription="Enviar"
           hasIconOnly
         ></Button>
       </section>

@@ -4,6 +4,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import RootPage from "../page/RootPage";
 import Login from "../components/Login";
 import Profile from "../page/Profile";
+import Register from "../components/Register";
 
 export const router = createBrowserRouter([
   {
@@ -29,5 +30,9 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);

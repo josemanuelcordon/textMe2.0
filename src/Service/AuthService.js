@@ -1,7 +1,7 @@
 import UserRepository from "../Repository/sql/UserSqlRepository.js";
 
-const getUser = async (telephone, password) => {
-  const user = await UserRepository.getUser(telephone, password);
+const getUser = async (username, password) => {
+  const user = await UserRepository.getUser(username, password);
   return user;
 };
 

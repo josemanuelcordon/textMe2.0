@@ -1,13 +1,13 @@
 const URL = "http://localhost:3000";
 
-const authUser = async (telephone, password) => {
+const authUser = async (username, password) => {
   const response = await fetch(`${URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      telephone: parseInt(telephone),
+      username,
       password,
     }),
   });
@@ -28,8 +28,30 @@ const getUserFriends = async (id) => {
   return friends;
 };
 
+const createUser = async (username, email, password) => {
+  const response = await fetch(`${URL}/user/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username,
+      email,
+      password,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Usuario ya existente");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export default {
   authUser,
   findUserByName,
   getUserFriends,
+  createUser,
 };

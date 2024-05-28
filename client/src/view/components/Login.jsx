@@ -1,18 +1,17 @@
 // Login.js
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     await login({
-      telephone: phone,
+      username,
       password,
     });
     navigate("/");
@@ -24,8 +23,8 @@ const Login = () => {
       <input
         type="text"
         placeholder="Username"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <input
         type="password"
@@ -34,6 +33,9 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
+      <p>
+        ¿Aún no tienes cuenta? <Link to="/register">Regístrate</Link>
+      </p>
     </div>
   );
 };

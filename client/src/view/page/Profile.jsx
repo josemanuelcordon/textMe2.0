@@ -1,13 +1,10 @@
 import { Column, Grid, FileUploader, Button } from "@carbon/react";
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [reload, setReload] = useState(false);
-  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
@@ -32,11 +29,13 @@ const Profile = () => {
 
     formData.append("image", selectedFile);
     try {
-      const response = await fetch("http://localhost:3000/upload", {
-        method: "POST",
-        body: formData,
-      });
-      setReload((prev) => !prev);
+      const response = await fetch(
+        "http://localhost:3000/upload/profile-image",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
     } catch (error) {
       console.error("Error al subir la imagen", error);
       alert("Error al subir la imagen");
@@ -50,7 +49,7 @@ const Profile = () => {
         <h2>{user.name}</h2>
         <img
           style={{ width: "264px", height: "264px", borderRadius: "50%" }}
-          src={`http://localhost:3000/uploads/${user.id}`}
+          src={`http://localhost:3000/profile-image/${user.id}`}
         />
         <FileUploader
           labelTitle="Subir imagen de perfil"

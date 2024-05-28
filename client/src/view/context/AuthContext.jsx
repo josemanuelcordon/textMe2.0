@@ -1,5 +1,5 @@
 // AuthContext.js
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext } from "react";
 import UserRepository from "../../repository/UserRepository";
 const AuthContext = createContext();
 
@@ -8,10 +8,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     const userLogin = await UserRepository.authUser(
-      userData.telephone,
+      userData.username,
       userData.password
     );
-    console.log(userLogin);
     if (userLogin) setUser(userLogin);
   };
 

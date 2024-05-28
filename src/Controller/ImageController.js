@@ -2,12 +2,17 @@ import path from "path";
 import fs from "fs";
 import UserService from "../Service/UserService.js";
 
-const uploadImage = async (req, res) => {
+const uploadProfileImage = async (req, res) => {
   try {
-    res.status(200).json({
-      message: "Imagen subida exitosamente",
-      imageUrl: `/uploads/profile-${req.body.userId}`,
-    });
+    res.status(200).end();
+  } catch (error) {
+    res.status(400).json({ error: "Error al subir la imagen" });
+  }
+};
+
+const uploadChatImage = async (req, res) => {
+  try {
+    res.status(200).end();
   } catch (error) {
     res.status(400).json({ error: "Error al subir la imagen" });
   }
@@ -31,7 +36,7 @@ const getProfileImage = async (req, res) => {
   if (foundFile) {
     res.sendFile(foundFile);
   } else {
-    res.status(404).json({ error: "Imagen de perfil no encontrada" });
+    res.sendFile(path.join(path.resolve(), "uploads", "default.png"));
   }
 };
 
@@ -59,17 +64,26 @@ const getChatImage = async (req, res) => {
         break;
       }
     }
+  } else {
+    for (const ext of possibleExtensions) {
+      const filePath = path.join(uploadsDir, `chat-${chatId}${ext}`);
+      if (fs.existsSync(filePath)) {
+        foundFile = filePath;
+        break;
+      }
+    }
   }
 
   if (foundFile) {
     res.sendFile(foundFile);
   } else {
-    res.status(404).json({ error: "Imagen de perfil no encontrada" });
+    res.sendFile(path.join(path.resolve(), "uploads", "default.png"));
   }
 };
 
 export default {
-  uploadImage,
+  uploadProfileImage,
+  uploadChatImage,
   getProfileImage,
   getChatImage,
 };

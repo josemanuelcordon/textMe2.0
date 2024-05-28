@@ -5,6 +5,7 @@ import {
   Modal,
   SelectableTile,
   TextInput,
+  FileUploader,
 } from "@carbon/react";
 import React, { useEffect, useState } from "react";
 import UserService from "../../service/UserService";
@@ -21,6 +22,15 @@ const GroupModalContainer = ({
   const [friends, setFriends] = useState([]);
   const [friendsSelected, setFriendsSelected] = useState([]);
   const [groupName, setGroupName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      setSelectedFile(file);
+    }
+  };
 
   useEffect(() => {
     const getFriends = async () => {
@@ -48,6 +58,34 @@ const GroupModalContainer = ({
         friendsSelected,
         groupName
       );
+
+      if (!selectedFile) {
+        return;
+      }
+
+      const formData = new FormData();
+      const renamedFile = new File(
+        [selectedFile],
+        `chat-${chat.id}${selectedFile.name.substring(
+          selectedFile.name.lastIndexOf(".")
+        )}`,
+        {
+          type: selectedFile.type,
+        }
+      );
+      formData.append("image", renamedFile);
+      try {
+        const response = await fetch(
+          "http://localhost:3000/upload/chat-image",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+      } catch (error) {
+        console.error("Error al subir la imagen", error);
+        alert("Error al subir la imagen");
+      }
 
       setChats((prev) => [chat, ...prev]);
       setChat(chat);
@@ -79,14 +117,26 @@ const GroupModalContainer = ({
           />
         </Column>
         <Column lg={16}>
+          <FileUploader
+            labelTitle="Subir imagen de perfil"
+            buttonLabel="Subir imagen"
+            buttonKind="ghost"
+            size="sm"
+            filenameStatus="edit"
+            accept={[".jpg", ".png"]}
+            multiple={false}
+            iconDescription="Eliminar archivo"
+            onChange={handleFileChange}
+          />
+        </Column>
+        <Column lg={16}>
           <div role="group" aria-label="selectable tiles">
             {friends.map((user) => (
               <SelectableTile
                 className="chat"
                 onClick={() => addToChat(user.id)}
               >
-                <h3>{user.name}</h3>
-                <p>{user.phone}</p>
+                <h3>{user.username}</h3>
               </SelectableTile>
             ))}
           </div>

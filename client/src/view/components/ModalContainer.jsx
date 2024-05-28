@@ -49,7 +49,7 @@ const ModalContainer = ({ open, setOpen, setChat, setChats, user, socket }) => {
           <ul className="friend--list">
             {newChats.map((user) => (
               <Tile className="chat" onClick={() => createChat(user.id)}>
-                <h3>{user.name}</h3>
+                <h3>{user.username}</h3>
               </Tile>
             ))}
           </ul>

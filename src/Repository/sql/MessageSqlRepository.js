@@ -42,8 +42,7 @@ const getChatMessages = async (chatId) => {
           date: message.date,
           is_read: message.is_read,
           user: {
-            name: message.name,
-            phone: message.phone,
+            username: message.username,
             email: message.email,
           },
         };
@@ -59,14 +58,14 @@ const getChatMessages = async (chatId) => {
 
 const getMessageInfoByChat = async (chatId, userId) => {
   const contentQuery =
-    "SELECT content FROM `message` WHERE `chat` = ? ORDER BY date DESC";
+    "SELECT content, date FROM `message` WHERE `chat` = ? ORDER BY date DESC";
   const unreadMessagesQuery =
     "SELECT COUNT(*) AS unreadMessages FROM `message` WHERE `chat` = ? AND is_read = 0 AND sender != ?";
   const result = {};
   const dbConnection = await mysql.connect();
   const [rows] = await dbConnection.query(contentQuery, [chatId]);
-  console.log(rows);
   result.content = rows[0]?.content ?? "";
+  result.date = rows[0]?.date ?? "";
   const [rows2] = await dbConnection.query(unreadMessagesQuery, [
     chatId,
     userId,

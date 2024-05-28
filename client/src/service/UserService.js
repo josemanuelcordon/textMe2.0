@@ -10,4 +10,9 @@ const getUserFriends = async (userId) => {
   return friends;
 };
 
-export default { findUserByName, getUserFriends };
+const createUser = async (username, email, password) => {
+  const user = await UserRepository.createUser(username, email, password);
+  return user;
+};
+
+export default { findUserByName, getUserFriends, createUser };

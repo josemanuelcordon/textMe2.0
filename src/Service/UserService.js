@@ -1,7 +1,7 @@
 import UserRepository from "../Repository/sql/UserSqlRepository.js";
 
-const getUsersByTelephone = async (username) => {
-  return await UserRepository.getUsersByTelephone(username);
+const getUsersByUsername = async (username) => {
+  return await UserRepository.getUsersByUsername(username);
 };
 
 const getUserIdsByChat = async (chatId) => {
@@ -20,10 +20,15 @@ const getChatParticipantsExceptMe = async (chatId, userId) => {
   return await UserRepository.getChatParticipantsExceptMe(chatId, userId);
 };
 
+const createUser = async (username, email, password) => {
+  return await UserRepository.createUser(username, email, password);
+};
+
 export default {
-  getUsersByTelephone,
+  getUsersByUsername,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,
   getChatParticipantsExceptMe,
+  createUser,
 };

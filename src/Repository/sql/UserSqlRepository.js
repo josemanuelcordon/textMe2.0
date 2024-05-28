@@ -1,11 +1,11 @@
 import mysql from "./db.js";
 
-const getUser = async (telephone, password) => {
-  const query = "SELECT * FROM `users` WHERE `phone` = ? AND `password` = ?";
+const getUser = async (username, password) => {
+  const query = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ?";
   const dbConnection = await mysql.connect();
 
   const [results, fields] = await dbConnection.query(query, [
-    telephone,
+    username,
     password,
   ]);
 
@@ -13,8 +13,8 @@ const getUser = async (telephone, password) => {
   return results[0];
 };
 
-const getUsersByTelephone = async (username) => {
-  const query = "SELECT * FROM `users` WHERE `name` = ?";
+const getUsersByUsername = async (username) => {
+  const query = "SELECT * FROM `users` WHERE `username` LIKE ?";
   const dbConnection = await mysql.connect();
 
   const [results, fields] = await dbConnection.query(query, [username]);
@@ -32,19 +32,20 @@ const getUserIdsByChat = async (chatId) => {
 };
 
 const getUserInfoByChat = async (chatId, userId) => {
+  console.log("chat: ", chatId, " user: ", userId);
   const query =
-    "SELECT name, phone FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ? AND id_user != ?";
+    "SELECT username FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ? AND id_user != ?";
   const dbConnection = await mysql.connect();
 
   const [results, fields] = await dbConnection.query(query, [chatId, userId]);
-  console.log(results);
+  console.log("RESULTADOS: ", results);
   await dbConnection.end();
   return results[0];
 };
 
 const getUserFriends = async (userId) => {
   const query = `
-    SELECT DISTINCT u.id, u.name, u.phone
+    SELECT DISTINCT u.id, u.username
     FROM chat_participants cp
     JOIN chat c ON cp.id_chat = c.id
     JOIN users u ON cp.id_user = u.id
@@ -74,11 +75,49 @@ const getChatParticipantsExceptMe = async (chatId, userId) => {
   return results;
 };
 
+const createUser = async (username, email, password) => {
+  const query =
+    "INSERT INTO `users` (`username`, `email`, `password`) VALUES (?, ?, ?)";
+  const getUserQuery =
+    "SELECT `id`, `username`, `email` FROM `users` WHERE `id` = ?";
+
+  let dbConnection;
+  try {
+    dbConnection = await mysql.connect();
+
+    // Insertar el usuario
+    const [result] = await dbConnection.query(query, [
+      username,
+      email,
+      password,
+    ]);
+
+    // Obtener el usuario recién creado
+    const [userRows] = await dbConnection.query(getUserQuery, [
+      result.insertId,
+    ]);
+
+    // Cerrar la conexión
+    await dbConnection.end();
+
+    // Retornar el usuario creado
+    if (userRows.length > 0) {
+      return userRows[0];
+    } else {
+      return {};
+    }
+  } catch (error) {
+    await dbConnection.end();
+    return null;
+  }
+};
+
 export default {
   getUser,
-  getUsersByTelephone,
+  getUsersByUsername,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,
   getChatParticipantsExceptMe,
+  createUser,
 };

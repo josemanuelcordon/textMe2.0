@@ -6,6 +6,7 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
   useEffect(() => {
     const getChats = async () => {
       const chatsResponse = await ChatService.getUserChats(user.id);
+      orderChatsByDate(chatsResponse);
       setChats(chatsResponse);
     };
     getChats();
@@ -13,6 +14,12 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
 
   const openChat = (chat) => {
     setChat(chat);
+  };
+
+  const orderChatsByDate = (chats) => {
+    chats.sort((a, b) => {
+      return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+    });
   };
 
   return (
@@ -46,31 +53,38 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
             </Tile>
           ))
         : chats.map((chatToList) => (
-            <Tile
-              className={
-                "chat" + (chatToList.id === chat?.id ? " selected" : "")
-              }
-              onClick={() => openChat(chatToList)}
-            >
-              <section className="chat-image--section">
-                <img
-                  style={{ width: "64px" }}
-                  src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
-                />
-              </section>
-              <section className="chat-info--section">
-                <h4>{chatToList.name}</h4>
-                <p>{chatToList.lastMessage?.substring(0, 16) + "..." ?? ""}</p>
-                <div className="unread-messages--icon">
-                  {chatToList.unreadMessages}
-                </div>
-                {chatToList.group_chat && (
-                  <Tag className="group-tag" type="green">
-                    Grupo
-                  </Tag>
-                )}
-              </section>
-            </Tile>
+            <>
+              <Tile
+                className={
+                  "chat" + (chatToList.id === chat?.id ? " selected" : "")
+                }
+                onClick={() => openChat(chatToList)}
+              >
+                <section className="chat-image--section">
+                  <img
+                    style={{ width: "64px" }}
+                    src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                  />
+                </section>
+                <section className="chat-info--section">
+                  <h4>{chatToList.name}</h4>
+                  <p>
+                    {chatToList.lastMessage?.substring(0, 16) + "..." ?? ""}
+                  </p>
+                  <div className="unread-messages--icon">
+                    {chatToList.unreadMessages}
+                  </div>
+                  {chatToList.group_chat && (
+                    <Tag className="group-tag" type="green">
+                      Grupo
+                    </Tag>
+                  )}
+                </section>
+              </Tile>
+              <div className="divider">
+                <span></span>
+              </div>
+            </>
           ))}
     </section>
   );

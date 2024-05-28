@@ -107,7 +107,7 @@ const Home = () => {
   };
 
   return (
-    <Grid className="page--template">
+    <Grid narrow fullWidth className="page--template">
       <Column lg={4}>
         <ExpandableSearch
           size="lg"
@@ -118,7 +118,7 @@ const Home = () => {
         />
       </Column>
       <Column lg={12} className="options-section">
-        <OverflowMenu renderIcon={Filter}>
+        <OverflowMenu menuOffset={{ left: -60 }} size="lg" renderIcon={Filter}>
           <OverflowMenuItem
             onClick={() => navigate("/profile")}
             itemText="Ver Perfil"
@@ -130,6 +130,11 @@ const Home = () => {
           <OverflowMenuItem
             onClick={() => setOpen2(true)}
             itemText="Crear Grupo"
+          />
+          <OverflowMenuItem
+            onClick={logout}
+            isDelete
+            itemText="Cerrar Sesión"
           />
         </OverflowMenu>
       </Column>

@@ -1,9 +1,9 @@
 import AuthService from "../Service/AuthService.js";
 
 const login = async (req, res) => {
-  const { telephone, password } = req.body;
+  const { username, password } = req.body;
 
-  const user = await AuthService.getUser(telephone, password);
+  const user = await AuthService.getUser(username, password);
 
   if (user) {
     res.status(200).json(user);

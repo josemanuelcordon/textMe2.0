@@ -21,11 +21,21 @@ router.get("/chats/:userId", ChatController.getUserChats);
 router.post("/chat/create", ChatController.createChat);
 router.post("/group-chat/create", ChatController.createGroupChat);
 
-router.get("/user", UserController.getUsersByTelephone);
+router.get("/user", UserController.getUsersByUsername);
 router.get("/user/:userId/friends", UserController.getUserFriends);
+router.post("/user/create", UserController.createUser);
 
-router.post("/upload", upload.any(), ImageController.uploadImage);
-router.get("/uploads/:userId", ImageController.getProfileImage);
+router.get("/profile-image/:userId", ImageController.getProfileImage);
 router.get("/chat-image/:chatId/:userId", ImageController.getChatImage);
+router.post(
+  "/upload/profile-image",
+  upload.any(),
+  ImageController.uploadProfileImage
+);
+router.post(
+  "/upload/chat-image",
+  upload.any(),
+  ImageController.uploadChatImage
+);
 
 export default router;
