@@ -3,13 +3,13 @@ import {
   Button,
   TextInput,
   Form,
-  FormGroup,
-  Grid,
-  Row,
-  Column,
+  PasswordInput,
+  Tile,
+  Stack,
 } from "@carbon/react";
 import UserService from "../../service/UserService";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "@carbon/icons-react";
 
 // Estado inicial del formulario
 const initialState = {
@@ -47,42 +47,58 @@ const Register = () => {
   };
 
   return (
-    <Grid>
-      <Column lg={16} md={8} sm={12}>
+    <main className="login-page">
+      <Tile className="login-container">
+        <img className="logo" src="logo.png" />
         <Form onSubmit={handleSubmit}>
-          <TextInput
-            id="username"
-            labelText="Username"
-            value={state.username}
-            onChange={(e) =>
-              dispatch({ type: "SET_USERNAME", payload: e.target.value })
-            }
-            required
-          />
-          <TextInput
-            id="email"
-            labelText="Email"
-            type="email"
-            value={state.email}
-            onChange={(e) =>
-              dispatch({ type: "SET_EMAIL", payload: e.target.value })
-            }
-            required
-          />
-          <TextInput
-            id="password"
-            labelText="Password"
-            type="password"
-            value={state.password}
-            onChange={(e) =>
-              dispatch({ type: "SET_PASSWORD", payload: e.target.value })
-            }
-            required
-          />
-          <Button type="submit">Register</Button>
+          <Stack gap={8}>
+            <h2>Registro</h2>
+            <TextInput
+              id="username"
+              labelText="Username"
+              value={state.username}
+              onChange={(e) =>
+                dispatch({ type: "SET_USERNAME", payload: e.target.value })
+              }
+              required
+            />
+            <TextInput
+              id="email"
+              labelText="Email"
+              type="email"
+              value={state.email}
+              onChange={(e) =>
+                dispatch({ type: "SET_EMAIL", payload: e.target.value })
+              }
+              required
+            />
+            <PasswordInput
+              id="password"
+              type="password"
+              labelText="Contraseña"
+              placeholder="Contraseña"
+              value={state.password}
+              onChange={(e) =>
+                dispatch({ type: "SET_PASSWORD", payload: e.target.value })
+              }
+              required
+            />
+            <section className="button--section">
+              <Button
+                size="2xl"
+                kind="secondary"
+                onClick={() => navigate("/login")}
+              >
+                Volver
+              </Button>
+              <Button size="2xl" renderIcon={ArrowRight} type="submit">
+                Registrarse
+              </Button>
+            </section>
+          </Stack>
         </Form>
-      </Column>
-    </Grid>
+      </Tile>
+    </main>
   );
 };
 

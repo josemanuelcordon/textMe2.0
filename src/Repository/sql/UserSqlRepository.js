@@ -17,7 +17,7 @@ const getUsersByUsername = async (username) => {
   const query = "SELECT * FROM `users` WHERE `username` LIKE ?";
   const dbConnection = await mysql.connect();
 
-  const [results, fields] = await dbConnection.query(query, [username]);
+  const [results, fields] = await dbConnection.query(query, [`${username}%`]);
   await dbConnection.end();
   return results;
 };

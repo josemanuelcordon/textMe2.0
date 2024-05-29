@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import messageService from "../../service/messageService";
-import { Button, TextArea } from "@carbon/react";
+import { Button, Form, Layer, TextArea, Tile } from "@carbon/react";
 import { SendFilled } from "@carbon/icons-react";
 
 const Chat = ({
@@ -44,7 +44,8 @@ const Chat = ({
     setMessage({ ...message, content: e.target.value });
   };
 
-  const sendMessage = () => {
+  const sendMessage = (e) => {
+    e.preventDefault();
     const messageToSend = {
       content: message.content,
       sender: user.id,
@@ -62,6 +63,15 @@ const Chat = ({
 
   return (
     <>
+      <Layer level={2}>
+        <Tile className="chat--header">
+          <img
+            style={{ width: "64px" }}
+            src={`http://localhost:3000/chat-image/${chat.id}/${user.id}`}
+          />
+          <h2>{chat.name}</h2>
+        </Tile>
+      </Layer>
       <ul className="messages--container">
         {messages.map((message, index) => (
           <>
@@ -88,19 +98,19 @@ const Chat = ({
           </>
         ))}
       </ul>
-      <section className="messages-inputs--container">
+      <Form onSubmit={sendMessage} className="messages-inputs--container">
         <TextArea
           value={message.content || ""}
           onChange={fillMessage}
         ></TextArea>
         <Button
-          onClick={sendMessage}
+          type="submit"
           className="send-button"
           renderIcon={SendFilled}
           iconDescription="Enviar"
           hasIconOnly
         ></Button>
-      </section>
+      </Form>
     </>
   );
 };

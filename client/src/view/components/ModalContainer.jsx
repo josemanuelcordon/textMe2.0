@@ -2,10 +2,21 @@ import { Button, Column, Grid, Modal, TextInput, Tile } from "@carbon/react";
 import React, { useState } from "react";
 import UserService from "../../service/UserService";
 import ChatService from "../../service/ChatService";
+import { Notification } from "../../domain/Notification";
+import { useNotifications } from "../context/NotificationContext";
 
-const ModalContainer = ({ open, setOpen, setChat, setChats, user, socket }) => {
+const ModalContainer = ({
+  open,
+  setOpen,
+  setChat,
+  setChats,
+  user,
+  chats,
+  socket,
+}) => {
   const [newChats, setNewChats] = useState([]);
   const [search, setSearch] = useState("");
+  const { addNotification } = useNotifications();
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -17,13 +28,17 @@ const ModalContainer = ({ open, setOpen, setChat, setChats, user, socket }) => {
     setNewChats(users);
   };
 
-  const createChat = async (userId) => {
-    const chat = await ChatService.createChat(user.id, userId);
-    setChats((prev) => [chat, ...prev]);
-    setChat(chat);
-    setOpen(false);
+  const createChat = async (userId, username) => {
+    if (!chats.some((chat) => chat.name === username)) {
+      const chat = await ChatService.createChat(user.id, userId);
+      setChats((prev) => [chat, ...prev]);
+      setChat(chat);
+      setOpen(false);
 
-    socket.emit("createChat", chat.id);
+      socket.emit("createChat", chat.id);
+    } else {
+      addNotification(new Notification("No se pudo crear el chat", "warning"));
+    }
   };
 
   return (
@@ -47,11 +62,22 @@ const ModalContainer = ({ open, setOpen, setChat, setChats, user, socket }) => {
         </Column>
         <Column lg={16}>
           <ul className="friend--list">
-            {newChats.map((user) => (
-              <Tile className="chat" onClick={() => createChat(user.id)}>
-                <h3>{user.username}</h3>
-              </Tile>
-            ))}
+            {newChats.map((userToList) => {
+              if (userToList.username !== user.username) {
+                return (
+                  <Tile
+                    key={userToList.id} // Asegúrate de usar una clave única para cada elemento
+                    className="chat"
+                    onClick={() =>
+                      createChat(userToList.id, userToList.username)
+                    }
+                  >
+                    <h3>{userToList.username}</h3>
+                  </Tile>
+                );
+              }
+              return null;
+            })}
           </ul>
         </Column>
       </Grid>

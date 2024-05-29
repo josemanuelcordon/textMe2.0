@@ -60,13 +60,14 @@ const getMessageInfoByChat = async (chatId, userId) => {
   const contentQuery =
     "SELECT content, date FROM `message` WHERE `chat` = ? ORDER BY date DESC";
   const unreadMessagesQuery =
-    "SELECT COUNT(*) AS unreadMessages FROM `message` WHERE `chat` = ? AND is_read = 0 AND sender != ?";
+    "SELECT COUNT(*) AS unreadMessages FROM `message` LEFT JOIN `message_read` ON id = id_message AND id_user = ? WHERE chat = ? AND sender != ? AND id_message IS NULL";
   const result = {};
   const dbConnection = await mysql.connect();
   const [rows] = await dbConnection.query(contentQuery, [chatId]);
   result.content = rows[0]?.content ?? "";
   result.date = rows[0]?.date ?? "";
   const [rows2] = await dbConnection.query(unreadMessagesQuery, [
+    userId,
     chatId,
     userId,
   ]);
@@ -76,15 +77,23 @@ const getMessageInfoByChat = async (chatId, userId) => {
 };
 
 const readMessages = async (chatId, userId) => {
+  const queryMessagesToRead =
+    "SELECT * FROM `message` LEFT JOIN `message_read` ON id = id_message WHERE chat = ? AND sender != ? AND id_message IS NULL";
   const query =
-    "UPDATE `message` SET `is_read` = 1 WHERE `chat` = ? AND sender != ?";
+    "INSERT INTO `message_read` (`id_message`, `id_user`) VALUES (?, ?)";
   try {
     const dbConnection = await mysql.connect();
-    const [rows, _] = await dbConnection.execute(query, [chatId, userId]);
+
+    const [messagesToRead] = await dbConnection.execute(queryMessagesToRead, [
+      chatId,
+      userId,
+    ]);
+
+    for (const message of messagesToRead) {
+      await dbConnection.execute(query, [message.id, userId]);
+    }
     await dbConnection.end();
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export default {

@@ -9,7 +9,6 @@ import {
   Column,
   Grid,
   ExpandableSearch,
-  Button,
   OverflowMenu,
   OverflowMenuItem,
 } from "@carbon/react";
@@ -19,6 +18,8 @@ import messageService from "../../service/messageService";
 import ModalContainer from "../components/ModalContainer";
 import ChatService from "../../service/ChatService";
 import GroupModalContainer from "../components/GroupModalContainer";
+import { useNotifications } from "../context/NotificationContext";
+import { Notification } from "../../domain/Notification";
 
 let socket;
 
@@ -29,7 +30,9 @@ const Home = () => {
   const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+
   const { user, logout } = useAuth();
+  const { addNotification } = useNotifications();
 
   const navigate = useNavigate();
 
@@ -46,12 +49,15 @@ const Home = () => {
 
   useEffect(() => {
     const messageHandler = async (message) => {
-      console.log(message);
+      if (message.sender !== user.id) {
+        addNotification(
+          new Notification(`Mensaje recibido! \n ${message.content}`, "info")
+        );
+      }
       if (message.chat === chat?.id) {
         setMessages((prevMessages) => [...prevMessages, message]);
         await messageService.readMessages(chat.id, user.id);
       }
-      console.log(chats);
       const chatIndex = chats.findIndex((chat) => chat.id === message.chat);
 
       if (chatIndex !== -1) {
@@ -68,13 +74,8 @@ const Home = () => {
         updatedChats.unshift(chatToUpdate);
 
         setChats(updatedChats);
-
-        console.log(
-          `Chat with ID ${chatToUpdate.id} updated and moved to the top of the list`
-        );
       } else {
         const chatsUpdated = await ChatService.getUserChats(user.id);
-        console.log(chatsUpdated);
         setChats(chatsUpdated);
       }
     };
@@ -167,6 +168,7 @@ const Home = () => {
             setOpen={setOpen}
             setChat={setChat}
             user={user}
+            chats={chats}
             socket={socket}
             setChats={setChats}
           />
