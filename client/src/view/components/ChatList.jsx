@@ -2,7 +2,17 @@ import React, { useEffect } from "react";
 import ChatService from "../../service/ChatService.js";
 import { Tile, Tag } from "@carbon/react";
 
-const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
+const ChatList = ({
+  chats,
+  setChats,
+  setSortedChats,
+  setChat,
+  user,
+  chat,
+  isExpandable,
+  setIsSideNavOpen,
+  sortedChats,
+}) => {
   useEffect(() => {
     const getChats = async () => {
       const chatsResponse = await ChatService.getUserChats(user.id);
@@ -13,6 +23,9 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
   }, [user]);
 
   const openChat = (chat) => {
+    if (isExpandable) {
+      setIsSideNavOpen(false);
+    }
     setChat(chat);
   };
 
@@ -22,39 +35,41 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
     });
   };
 
+  const filterPrivateChats = () => {
+    const chatsCopy = [...chats];
+    const privateChats = chatsCopy.filter((chat) => chat.group_chat === null);
+    setSortedChats(privateChats);
+    console.log(chats);
+  };
+
+  const filterGroupChats = () => {
+    const chatsCopy = [...chats];
+    const groupChats = chatsCopy.filter((chat) => chat.group_chat === 1);
+    setSortedChats(groupChats);
+  };
+
+  const resetSortedChats = () => {
+    setSortedChats(chats);
+  };
+
   return (
-    <section className="chat--list">
+    <nav className="chat--list">
+      <section className="tags">
+        <Tag size="lg" title="Grupo" type="blue" onClick={resetSortedChats}>
+          Todos
+        </Tag>
+        <Tag size="lg" title="Grupo" type="red" onClick={filterPrivateChats}>
+          Privado
+        </Tag>
+        <Tag size="lg" title="Grupo" type="green" onClick={filterGroupChats}>
+          Grupo
+        </Tag>
+      </section>
       {sortedChats.length > 0
         ? sortedChats.map((chatToList) => (
-            <Tile
-              className={
-                "chat" + (chatToList.id === chat?.id ? " selected" : "")
-              }
-              onClick={() => openChat(chatToList)}
-            >
-              <section className="chat-image--section">
-                <img
-                  style={{ width: "64px" }}
-                  src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
-                />
-              </section>
-              <section className="chat-info--section">
-                <h4>{chatToList.name}</h4>
-                <p>{chatToList.lastMessage?.substring(0, 16) + "..." ?? ""}</p>
-                <div className="unread-messages--icon">
-                  {chatToList.unreadMessages}
-                </div>
-                {chatToList.group_chat && (
-                  <Tag className="group-tag" type="green">
-                    Grupo
-                  </Tag>
-                )}
-              </section>
-            </Tile>
-          ))
-        : chats.map((chatToList) => (
             <>
               <Tile
+                tabIndex="0"
                 className={
                   "chat" + (chatToList.id === chat?.id ? " selected" : "")
                 }
@@ -62,15 +77,46 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
               >
                 <section className="chat-image--section">
                   <img
-                    style={{ width: "64px" }}
+                    style={{ width: "64px", height: "64px" }}
                     src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
                   />
                 </section>
                 <section className="chat-info--section">
                   <h4>{chatToList.name}</h4>
-                  <p>
-                    {chatToList.lastMessage?.substring(0, 16) + "..." ?? ""}
-                  </p>
+                  <p>{chatToList.lastMessage && chatToList.lastMessage}</p>
+                  <div className="unread-messages--icon">
+                    {chatToList.unreadMessages}
+                  </div>
+                  {chatToList.group_chat && (
+                    <Tag className="group-tag" type="green">
+                      Grupo
+                    </Tag>
+                  )}
+                </section>
+              </Tile>
+              <div className="divider">
+                <span></span>
+              </div>
+            </>
+          ))
+        : chats.map((chatToList) => (
+            <>
+              <Tile
+                tabIndex="0"
+                className={
+                  "chat" + (chatToList.id === chat?.id ? " selected" : "")
+                }
+                onClick={() => openChat(chatToList)}
+              >
+                <section className="chat-image--section">
+                  <img
+                    style={{ width: "64px", height: "64px" }}
+                    src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                  />
+                </section>
+                <section className="chat-info--section">
+                  <h4>{chatToList.name}</h4>
+                  <p>{chatToList.lastMessage && chatToList.lastMessage}</p>
                   <div className="unread-messages--icon">
                     {chatToList.unreadMessages}
                   </div>
@@ -86,7 +132,7 @@ const ChatList = ({ chats, setChats, setChat, user, chat, sortedChats }) => {
               </div>
             </>
           ))}
-    </section>
+    </nav>
   );
 };
 

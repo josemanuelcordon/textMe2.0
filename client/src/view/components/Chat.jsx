@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import messageService from "../../service/messageService";
-import { Button, Form, Layer, TextArea, Tile } from "@carbon/react";
+import { Button, Form, IconButton, Layer, TextArea, Tile } from "@carbon/react";
 import { SendFilled } from "@carbon/icons-react";
 
 const Chat = ({
@@ -46,6 +46,8 @@ const Chat = ({
 
   const sendMessage = (e) => {
     e.preventDefault();
+    if (!message.content || message.content.trim() === "") return;
+
     const messageToSend = {
       content: message.content,
       sender: user.id,
@@ -61,12 +63,19 @@ const Chat = ({
     setMessage({ ...message, content: "" });
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
+    }
+  };
+
   return (
     <>
       <Layer level={2}>
         <Tile className="chat--header">
           <img
-            style={{ width: "64px" }}
+            className="chat--image"
             src={`http://localhost:3000/chat-image/${chat.id}/${user.id}`}
           />
           <h2>{chat.name}</h2>
@@ -74,42 +83,34 @@ const Chat = ({
       </Layer>
       <ul className="messages--container">
         {messages.map((message, index) => (
-          <>
-            <li
-              className={`message-container ${
-                message.sender === user.id ? "sent" : ""
-              }`}
-              key={index}
+          <li
+            className={`message-container ${
+              message.sender === user.id ? "sent" : ""
+            }`}
+            key={index}
+          >
+            <img
+              src={`http://localhost:3000/profile-image/${message.sender}`}
+            />
+            <p
+              className={`${
+                message.sender === user.id ? "message-sent" : "message-received"
+              } message`}
             >
-              <img
-                style={{ width: "42px", height: "42px", borderRadius: "50%" }}
-                src={`http://localhost:3000/profile-image/${message.sender}`}
-              />
-              <p
-                className={` ${
-                  message.sender === user.id
-                    ? "message-sent"
-                    : "message-received"
-                } message`}
-              >
-                {message.content}
-              </p>
-            </li>
-          </>
+              {message.content}
+            </p>
+          </li>
         ))}
       </ul>
       <Form onSubmit={sendMessage} className="messages-inputs--container">
         <TextArea
           value={message.content || ""}
           onChange={fillMessage}
+          onKeyDown={handleKeyPress}
         ></TextArea>
-        <Button
-          type="submit"
-          className="send-button"
-          renderIcon={SendFilled}
-          iconDescription="Enviar"
-          hasIconOnly
-        ></Button>
+        <button type="submit" className="send-button">
+          <SendFilled />
+        </button>
       </Form>
     </>
   );

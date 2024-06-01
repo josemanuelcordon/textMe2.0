@@ -60,6 +60,11 @@ const GroupModalContainer = ({
       );
 
       if (!selectedFile) {
+        setChats((prev) => [chat, ...prev]);
+        setChat(chat);
+        setOpen(false);
+
+        socket.emit("createChat", chat.id);
         return;
       }
 

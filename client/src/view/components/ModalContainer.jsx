@@ -50,17 +50,20 @@ const ModalContainer = ({
       passiveModal
     >
       <Grid>
-        <Column lg={12}>
+        <Column lg={12} md={6} sm={4}>
           <TextInput
             value={search}
             onChange={handleSearch}
             labelText="Buscar a gente nueva"
           />
         </Column>
-        <Column lg={4}>
-          <Button onClick={handleSubmit}>Buscar</Button>
+        <Column lg={4} md={2} sm={4}>
+          <div className="search-button-container">
+            <Button onClick={handleSubmit}>Buscar</Button>
+          </div>
         </Column>
-        <Column lg={16}>
+
+        <Column lg={16} md={8} sm={4}>
           <ul className="friend--list">
             {newChats.map((userToList) => {
               if (userToList.username !== user.username) {

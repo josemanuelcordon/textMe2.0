@@ -1,4 +1,3 @@
-// Home.js
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +10,9 @@ import {
   ExpandableSearch,
   OverflowMenu,
   OverflowMenuItem,
+  Button,
 } from "@carbon/react";
-import { Filter } from "@carbon/icons-react";
+import { Filter, Menu } from "@carbon/icons-react";
 
 import messageService from "../../service/messageService";
 import ModalContainer from "../components/ModalContainer";
@@ -30,11 +30,26 @@ const Home = () => {
   const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const [isScreenSmall, setIsScreenSmall] = useState(window.innerWidth < 1055);
 
   const { user, logout } = useAuth();
   const { addNotification } = useNotifications();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsScreenSmall(window.innerWidth < 1055);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Limpia el listener cuando el componente se desmonta
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     socket = io("ws://localhost:3000");
@@ -49,6 +64,7 @@ const Home = () => {
 
   useEffect(() => {
     const messageHandler = async (message) => {
+      setSortedChats([]);
       if (message.sender !== user.id) {
         addNotification(
           new Notification(`Mensaje recibido! \n ${message.content}`, "info")
@@ -109,7 +125,7 @@ const Home = () => {
 
   return (
     <Grid narrow fullWidth className="page--template">
-      <Column lg={4}>
+      <Column xlg={4} lg={6} md={0} sm={0} className="search-column">
         <ExpandableSearch
           size="lg"
           labelText="Search"
@@ -118,8 +134,33 @@ const Home = () => {
           onChange={handleSearch}
         />
       </Column>
-      <Column lg={12} className="options-section">
-        <OverflowMenu menuOffset={{ left: -60 }} size="lg" renderIcon={Filter}>
+      <Column
+        xlg={12}
+        lg={10}
+        md={8}
+        sm={4}
+        className={`options-section ${
+          isScreenSmall ? "options-with-menu" : ""
+        }`}
+      >
+        {isScreenSmall && (
+          <Button
+            hasIconOnly
+            renderIcon={Menu}
+            kind="ghost"
+            iconDescription="Abrir chats"
+            nonce=""
+            align="right"
+            onClick={() => setIsSideNavOpen(!isSideNavOpen)}
+            className="menu-button"
+          />
+        )}
+        <OverflowMenu
+          menuOffset={{ left: -60 }}
+          size="lg"
+          align="left"
+          iconDescription="Opciones"
+        >
           <OverflowMenuItem
             onClick={() => navigate("/profile")}
             itemText="Ver Perfil"
@@ -134,22 +175,24 @@ const Home = () => {
           />
           <OverflowMenuItem
             onClick={logout}
+            hasDivider
             isDelete
             itemText="Cerrar Sesión"
           />
         </OverflowMenu>
       </Column>
-      <Column lg={4}>
+      <Column xlg={4} lg={6} md={0} sm={0} className="chat-list-column">
         <ChatList
           user={user}
           chats={chats}
           chat={chat}
           sortedChats={sortedChats}
+          setSortedChats={setSortedChats}
           setChats={setChats}
           setChat={setChat}
         />
       </Column>
-      <Column lg={12}>
+      <Column xlg={12} lg={10} md={8} sm={4} className="chat--grid--column">
         <main className="chat--container">
           {chat && (
             <Chat
@@ -182,6 +225,29 @@ const Home = () => {
           />
         </main>
       </Column>
+
+      {isSideNavOpen && (
+        <div className="side-nav">
+          <ExpandableSearch
+            size="lg"
+            labelText="Search"
+            closeButtonLabelText="Clear search input"
+            id="search-expandable-2"
+            onChange={handleSearch}
+          />
+          <ChatList
+            user={user}
+            chats={chats}
+            chat={chat}
+            isExpandable={true}
+            setIsSideNavOpen={setIsSideNavOpen}
+            setSortedChats={setSortedChats}
+            sortedChats={sortedChats}
+            setChats={setChats}
+            setChat={setChat}
+          />
+        </div>
+      )}
     </Grid>
   );
 };
