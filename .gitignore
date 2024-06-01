@@ -14,8 +14,9 @@ dist-ssr
 uploads/*
 
 client/node_modules
-writable
+writable/*
 writable/db_data/*
+!writable/db_data
 
 # Editor directories and files
 .vscode/*
