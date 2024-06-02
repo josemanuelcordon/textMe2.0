@@ -3,7 +3,7 @@ import date from "date-and-time";
 
 const saveMessage = async (message) => {
   const query =
-    "INSERT INTO `message` (`sender`, `chat`, `date`, `content`, `is_read`) VALUES (?, ?, ?, ?, 0)";
+    "INSERT INTO `message` (`sender`, `chat`, `date`, `content`) VALUES (?, ?, ?, ?)";
   try {
     let now = new Date();
     now = date.format(now, "YYYY-MM-DD HH:mm:ss");

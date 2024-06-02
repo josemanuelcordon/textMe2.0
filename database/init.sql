@@ -31,8 +31,16 @@ USE textMe;
 
 CREATE TABLE `chat` (
   `id` int(11) NOT NULL,
-  `group_chat` tinyint(1) NOT NULL
+  `group_chat` tinyint(1) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chat`
+--
+
+INSERT INTO `chat` (`id`, `group_chat`, `name`) VALUES
+(1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -45,6 +53,14 @@ CREATE TABLE `chat_participants` (
   `id_user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `chat_participants`
+--
+
+INSERT INTO `chat_participants` (`id_chat`, `id_user`) VALUES
+(1, 4),
+(1, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -55,27 +71,34 @@ CREATE TABLE `message` (
   `id` int(11) NOT NULL,
   `sender` int(11) NOT NULL,
   `content` text NOT NULL,
-  `date` datetime NOT NULL
+  `date` datetime NOT NULL,
+  `chat` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `message`
 --
 
-INSERT INTO `message` (`id`, `sender`, `content`, `date`) VALUES
-(1, 1, 'hola', '2024-05-07 00:00:00'),
-(2, 1, 'hola', '2024-05-07 00:00:00'),
-(3, 1, 'a', '2024-05-07 18:00:30'),
-(4, 1, 'sdsa', '2024-05-07 18:02:22'),
-(5, 1, 'sdsa', '2024-05-07 18:04:02'),
-(6, 1, 'Hola', '2024-05-07 18:18:30'),
-(7, 1, 'Que tal estamos', '2024-05-07 18:18:35'),
-(8, 1, 'Por que yo bien', '2024-05-07 18:18:41'),
-(9, 2, 'Yo no tan bien', '2024-05-07 18:18:52'),
-(10, 2, 'dasd', '2024-05-07 18:20:31'),
-(11, 2, 'asdasd', '2024-05-07 18:20:33'),
-(12, 2, 'asdasd', '2024-05-07 18:20:34'),
-(13, 2, 'asdasdsa', '2024-05-07 18:20:36');
+INSERT INTO `message` (`id`, `sender`, `content`, `date`, `chat`) VALUES
+(14, 4, 'JUAN JUAN', '2024-06-01 11:26:35', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_read`
+--
+
+CREATE TABLE `message_read` (
+  `id_message` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `message_read`
+--
+
+INSERT INTO `message_read` (`id_message`, `id_user`) VALUES
+(14, 3);
 
 -- --------------------------------------------------------
 
@@ -85,9 +108,8 @@ INSERT INTO `message` (`id`, `sender`, `content`, `date`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone` int(11) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -95,13 +117,19 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`) VALUES
-(1, 'jose', 'jasdadasdad', 656259784, 'aaaa'),
-(2, 'pepe', 'hola@gmail.com', 111111111, 'aaaa');
+INSERT INTO `users` (`id`, `username`, `email`, `password`) VALUES
+(3, 'jose', 'jose@gmail.com', 'vki5ytnr2'),
+(4, 'jose2', 'jose2@gmail.com', 'vki5ytnr2');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `chat`
+--
+ALTER TABLE `chat`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `message`
@@ -110,26 +138,39 @@ ALTER TABLE `message`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `message_read`
+--
+ALTER TABLE `message_read`
+  ADD PRIMARY KEY (`id_message`,`id_user`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `chat`
+--
+ALTER TABLE `chat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

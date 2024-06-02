@@ -82,8 +82,26 @@ const createGroupChat = async (creator, members, name) => {
   }
 };
 
+const isGroupChat = async (chatId) => {
+  const query = `
+    SELECT c.group_chat
+    FROM chat c
+    WHERE c.id = ?
+  `;
+  try {
+    const dbConnection = await mysql.connect();
+    const [rows, fields] = await dbConnection.execute(query, [chatId]);
+    await dbConnection.end();
+    return rows[0].group_chat !== null;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
 export default {
   getUserChats,
   createChat,
   createGroupChat,
+  isGroupChat,
 };

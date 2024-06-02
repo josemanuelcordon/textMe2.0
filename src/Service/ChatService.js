@@ -36,8 +36,13 @@ const createGroupChat = async (creator, members, name) => {
   return chat;
 };
 
+const isGroupChat = async (chatId) => {
+  return await ChatRepository.isGroupChat(chatId);
+};
+
 export default {
   getUserChats,
   createChat,
   createGroupChat,
+  isGroupChat,
 };

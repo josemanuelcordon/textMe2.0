@@ -1,9 +1,19 @@
-import { Button, Column, Grid, Modal, TextInput, Tile } from "@carbon/react";
+import {
+  Button,
+  Column,
+  Grid,
+  Modal,
+  TextInput,
+  Tile,
+  PaginationNav,
+} from "@carbon/react";
 import React, { useState } from "react";
 import UserService from "../../service/UserService";
 import ChatService from "../../service/ChatService";
 import { Notification } from "../../domain/Notification";
 import { useNotifications } from "../context/NotificationContext";
+
+const USERS_SHOWN = 6;
 
 const ModalContainer = ({
   open,
@@ -16,6 +26,7 @@ const ModalContainer = ({
 }) => {
   const [newChats, setNewChats] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { addNotification } = useNotifications();
 
   const handleSearch = (e) => {
@@ -26,6 +37,7 @@ const ModalContainer = ({
     e.preventDefault();
     const users = await UserService.findUserByName(search);
     setNewChats(users);
+    setCurrentPage(0);
   };
 
   const createChat = async (userId, username) => {
@@ -40,6 +52,11 @@ const ModalContainer = ({
       addNotification(new Notification("No se pudo crear el chat", "warning"));
     }
   };
+
+  const startIndex = currentPage * USERS_SHOWN;
+  const endIndex = startIndex + USERS_SHOWN;
+  const currentChats = newChats.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(newChats.length / USERS_SHOWN);
 
   return (
     <Modal
@@ -65,7 +82,7 @@ const ModalContainer = ({
 
         <Column lg={16} md={8} sm={4}>
           <ul className="friend--list">
-            {newChats.map((userToList) => {
+            {currentChats.map((userToList) => {
               if (userToList.username !== user.username) {
                 return (
                   <Tile
@@ -75,6 +92,9 @@ const ModalContainer = ({
                       createChat(userToList.id, userToList.username)
                     }
                   >
+                    <img
+                      src={`http://localhost:3000/profile-image/${userToList.id}`}
+                    />
                     <h3>{userToList.username}</h3>
                   </Tile>
                 );
@@ -82,6 +102,15 @@ const ModalContainer = ({
               return null;
             })}
           </ul>
+        </Column>
+        <Column lg={16} md={8} sm={4}>
+          <PaginationNav
+            className={`${newChats.length > 0 ? "show" : "hidden"}`}
+            itemsShown={10}
+            totalItems={totalPages}
+            onChange={(page) => setCurrentPage(page)}
+            page={currentPage}
+          />
         </Column>
       </Grid>
     </Modal>

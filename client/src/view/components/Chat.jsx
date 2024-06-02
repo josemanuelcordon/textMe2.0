@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import messageService from "../../service/messageService";
 import { Button, Form, IconButton, Layer, TextArea, Tile } from "@carbon/react";
 import { SendFilled } from "@carbon/icons-react";
@@ -13,6 +13,7 @@ const Chat = ({
   setMessages,
 }) => {
   const [message, setMessage] = useState({});
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -20,7 +21,6 @@ const Chat = ({
         chat.id,
         user.id
       );
-      console.log(messagesResponse);
       setMessages(messagesResponse);
     };
 
@@ -39,6 +39,12 @@ const Chat = ({
 
     setChats(chatsRead);
   }, [chat]);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const fillMessage = (e) => {
     setMessage({ ...message, content: e.target.value });
@@ -101,6 +107,7 @@ const Chat = ({
             </p>
           </li>
         ))}
+        <div ref={messagesEndRef} />
       </ul>
       <Form onSubmit={sendMessage} className="messages-inputs--container">
         <TextArea

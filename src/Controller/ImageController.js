@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import UserService from "../Service/UserService.js";
+import ChatService from "../Service/ChatService.js";
 
 const uploadProfileImage = async (req, res) => {
   try {
@@ -43,6 +44,7 @@ const getProfileImage = async (req, res) => {
 const getChatImage = async (req, res) => {
   const chatId = req.params.chatId;
   const userId = req.params.userId;
+  console.log("Id del chat", chatId);
 
   const uploadsDir = path.join(path.resolve(), "uploads");
   const possibleExtensions = [".jpg", ".png"];
@@ -53,7 +55,11 @@ const getChatImage = async (req, res) => {
     userId
   );
 
-  if (chatParticipants.length === 1) {
+  const isGroupChat = await ChatService.isGroupChat(chatId);
+  console.log("Es chat grupal", isGroupChat);
+  console.log("Participantes del chat", chatParticipants);
+
+  if (!isGroupChat) {
     for (const ext of possibleExtensions) {
       const filePath = path.join(
         uploadsDir,

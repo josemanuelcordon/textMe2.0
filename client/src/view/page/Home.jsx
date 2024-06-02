@@ -75,25 +75,30 @@ const Home = () => {
         await messageService.readMessages(chat.id, user.id);
       }
       const chatIndex = chats.findIndex((chat) => chat.id === message.chat);
+      let chatsUpdated = [...chats];
+
+      if (chatIndex === -1) {
+        chatsUpdated = await ChatService.getUserChats(user.id);
+      }
+
+      const newChatIndex = chatsUpdated.findIndex(
+        (chat) => chat.id === message.chat
+      );
+
+      const chatToUpdate = chatsUpdated[newChatIndex];
 
       if (chatIndex !== -1) {
-        const updatedChats = [...chats];
-
-        const chatToUpdate = updatedChats[chatIndex];
-
-        chatToUpdate.lastMessage = message.content;
         if (message.sender !== user.id && chat?.id !== message.chat) {
           chatToUpdate.unreadMessages += 1;
         }
-
-        updatedChats.splice(chatIndex, 1);
-        updatedChats.unshift(chatToUpdate);
-
-        setChats(updatedChats);
-      } else {
-        const chatsUpdated = await ChatService.getUserChats(user.id);
-        setChats(chatsUpdated);
       }
+
+      chatToUpdate.lastMessage = message.content;
+
+      chatsUpdated.splice(chatIndex, 1);
+      chatsUpdated.unshift(chatToUpdate);
+
+      setChats(chatsUpdated);
     };
     socket.on("message", messageHandler);
 

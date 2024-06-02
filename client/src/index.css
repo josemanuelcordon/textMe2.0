@@ -149,6 +149,15 @@ body {
   cursor: pointer;
 }
 
+.chat img {
+  height: 60px;
+  width: 60px;
+}
+
+.chat h3 {
+  margin-left: 16px;
+}
+
 .chat:hover {
   background-color: #f4f4f4;
 }
@@ -203,7 +212,7 @@ body {
 }
 
 .friend--list {
-  height: 400px;
+  height: 500px;
   padding-top: 16px;
   list-style: none;
 }
@@ -453,6 +462,19 @@ body {
   display: grid;
   place-content: center;
   height: 100%;
+}
+
+.show {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.cds--pagination-nav__list {
+  display: flex;
+  justify-content: center;
 }
 
 @media (max-width: 1055px) {
