@@ -25,7 +25,6 @@ const saveMessage = async (message) => {
 const getChatMessages = async (chatId) => {
   const query =
     "SELECT * FROM `message` AS m JOIN `users` AS u ON u.id = m.sender WHERE `chat` = ?";
-  console.log("A");
   try {
     const dbConnection = await mysql.connect();
     const [rows, _] = await dbConnection.query(query, [chatId]);

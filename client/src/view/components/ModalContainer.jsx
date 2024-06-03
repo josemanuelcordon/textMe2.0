@@ -69,6 +69,8 @@ const ModalContainer = ({
       <Grid>
         <Column lg={12} md={6} sm={4}>
           <TextInput
+            maxCount={255}
+            invalidText="El texto es demasiado largo..."
             value={search}
             onChange={handleSearch}
             labelText="Buscar a gente nueva"

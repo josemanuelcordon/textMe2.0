@@ -54,6 +54,8 @@ const Register = () => {
           <Stack gap={8}>
             <h2>Registro</h2>
             <TextInput
+              maxCount={255}
+              invalidText="El texto es demasiado largo..."
               id="username"
               labelText="Username"
               value={state.username}
@@ -63,6 +65,8 @@ const Register = () => {
               required
             />
             <TextInput
+              maxCount={255}
+              invalidText="El texto es demasiado largo..."
               id="email"
               labelText="Email"
               type="email"

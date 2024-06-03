@@ -36,6 +36,8 @@ const Login = () => {
           <Stack gap={8}>
             <h2>Login</h2>
             <TextInput
+              maxCount={255}
+              invalidText="El texto es demasiado largo..."
               id="username"
               type="text"
               placeholder="Nombre de usuario"

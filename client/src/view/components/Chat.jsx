@@ -1,7 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
 import messageService from "../../service/messageService";
-import { Button, Form, IconButton, Layer, TextArea, Tile } from "@carbon/react";
-import { SendFilled } from "@carbon/icons-react";
+import {
+  Button,
+  Form,
+  IconButton,
+  Layer,
+  TextArea,
+  Tile,
+  Toggletip,
+  ToggletipButton,
+  ToggletipContent,
+  Tooltip,
+} from "@carbon/react";
+import { SendFilled, Information } from "@carbon/icons-react";
 
 const Chat = ({
   user,
@@ -85,6 +96,20 @@ const Chat = ({
             src={`http://localhost:3000/chat-image/${chat.id}/${user.id}`}
           />
           <h2>{chat.name}</h2>
+          {chat.group_chat && (
+            <Toggletip align="bottom">
+              <ToggletipButton label="Show information">
+                <Information />
+              </ToggletipButton>
+              <ToggletipContent>
+                <p>
+                  {chat.participants.map((user) => (
+                    <p>{user.username}</p>
+                  ))}
+                </p>
+              </ToggletipContent>
+            </Toggletip>
+          )}
         </Tile>
       </Layer>
       <ul className="messages--container">
@@ -95,9 +120,17 @@ const Chat = ({
             }`}
             key={index}
           >
-            <img
-              src={`http://localhost:3000/profile-image/${message.sender}`}
-            />
+            <Toggletip align={message.sender === user.id ? "left" : "right"}>
+              <ToggletipButton label="Show information">
+                <img
+                  src={`http://localhost:3000/profile-image/${message.sender}`}
+                />
+              </ToggletipButton>
+              <ToggletipContent>
+                <p>{message.user?.username}</p>
+              </ToggletipContent>
+            </Toggletip>
+
             <p
               className={`${
                 message.sender === user.id ? "message-sent" : "message-received"

@@ -170,6 +170,11 @@ body {
   margin-right: 10px;
 }
 
+.chat--image {
+  height: 60px;
+  width: 60px;
+}
+
 .chat-info--section {
   flex: 1;
   overflow: hidden;
@@ -441,6 +446,7 @@ body {
 
 .chat--image {
   width: 60px;
+  height: 60px;
 }
 
 .send-button {
@@ -475,6 +481,34 @@ body {
 .cds--pagination-nav__list {
   display: flex;
   justify-content: center;
+}
+
+.chat-selectable {
+  height: 200px;
+  width: 200px;
+}
+
+.chat-selectable img {
+  width: 60px;
+  height: 60px;
+}
+
+.friends-select-container {
+  display: grid;
+  place-content: center;
+  gap: 8px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container .cds--form-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 1055px) {
@@ -520,7 +554,6 @@ body {
 
   .chat--header {
     height: 60px;
-    overflow: hidden;
   }
 
   .chat--image {

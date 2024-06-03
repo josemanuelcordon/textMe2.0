@@ -48,6 +48,12 @@ const ChatList = ({
     setSortedChats(groupChats);
   };
 
+  const filterUnreadChats = () => {
+    const chatsCopy = [...chats];
+    const groupChats = chatsCopy.filter((chat) => chat.unreadMessages > 0);
+    setSortedChats(groupChats);
+  };
+
   const resetSortedChats = () => {
     setSortedChats(chats);
   };
@@ -63,6 +69,9 @@ const ChatList = ({
         </Tag>
         <Tag size="lg" title="Grupo" type="green" onClick={filterGroupChats}>
           Grupo
+        </Tag>
+        <Tag size="lg" title="Grupo" type="purple" onClick={filterUnreadChats}>
+          No leidos
         </Tag>
       </section>
       {sortedChats.length > 0

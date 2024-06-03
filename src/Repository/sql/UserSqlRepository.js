@@ -32,15 +32,20 @@ const getUserIdsByChat = async (chatId) => {
 };
 
 const getUserInfoByChat = async (chatId, userId) => {
-  console.log("chat: ", chatId, " user: ", userId);
   const query =
     "SELECT username FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ? AND id_user != ?";
+
+  const participantsQuery =
+    "SELECT username FROM `users` JOIN `chat_participants` ON id = id_user WHERE id_chat = ?";
   const dbConnection = await mysql.connect();
 
   const [results, fields] = await dbConnection.query(query, [chatId, userId]);
-  console.log("RESULTADOS: ", results);
+  const userInfo = {};
+  userInfo.username = results[0].username;
+  const [results2, _] = await dbConnection.query(participantsQuery, [chatId]);
+  userInfo.chatParticipants = results2;
   await dbConnection.end();
-  return results[0];
+  return userInfo;
 };
 
 const getUserFriends = async (userId) => {

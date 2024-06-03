@@ -6,10 +6,13 @@ import {
   SelectableTile,
   TextInput,
   FileUploader,
+  PaginationNav,
 } from "@carbon/react";
 import React, { useEffect, useState } from "react";
 import UserService from "../../service/UserService";
 import ChatService from "../../service/ChatService";
+
+const USERS_SHOWN = 3;
 
 const GroupModalContainer = ({
   open,
@@ -23,11 +26,11 @@ const GroupModalContainer = ({
   const [friendsSelected, setFriendsSelected] = useState([]);
   const [groupName, setGroupName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-
       setSelectedFile(file);
     }
   };
@@ -35,11 +38,12 @@ const GroupModalContainer = ({
   useEffect(() => {
     const getFriends = async () => {
       const friends = await UserService.getUserFriends(user.id);
-      console.log(friends);
       setFriends(friends);
     };
-    getFriends();
-  }, [open]);
+    if (open) {
+      getFriends();
+    }
+  }, [open, user.id]);
 
   const addToChat = (userId) => {
     setFriendsSelected((prev) => {
@@ -63,7 +67,6 @@ const GroupModalContainer = ({
         setChats((prev) => [chat, ...prev]);
         setChat(chat);
         setOpen(false);
-
         socket.emit("createChat", chat.id);
         return;
       }
@@ -80,13 +83,10 @@ const GroupModalContainer = ({
       );
       formData.append("image", renamedFile);
       try {
-        const response = await fetch(
-          "http://localhost:3000/upload/chat-image",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        await fetch("http://localhost:3000/upload/chat-image", {
+          method: "POST",
+          body: formData,
+        });
       } catch (error) {
         console.error("Error al subir la imagen", error);
         alert("Error al subir la imagen");
@@ -95,7 +95,6 @@ const GroupModalContainer = ({
       setChats((prev) => [chat, ...prev]);
       setChat(chat);
       setOpen(false);
-
       socket.emit("createChat", chat.id);
     }
   };
@@ -104,6 +103,11 @@ const GroupModalContainer = ({
     setOpen(false);
     setFriendsSelected([]);
   };
+
+  const startIndex = currentPage * USERS_SHOWN;
+  const endIndex = startIndex + USERS_SHOWN;
+  const currentFriends = friends.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(friends.length / USERS_SHOWN);
 
   return (
     <Modal
@@ -114,14 +118,16 @@ const GroupModalContainer = ({
       passiveModal
     >
       <Grid>
-        <Column lg={16}>
+        <Column lg={10} md={8} sm={4}>
           <TextInput
             value={groupName}
+            maxCount={255}
+            invalidText="El texto es demasiado largo..."
             onChange={(e) => setGroupName(e.target.value)}
             labelText="Nombre del grupo"
           />
         </Column>
-        <Column lg={16}>
+        <Column className="button-container" lg={6} md={8} sm={4}>
           <FileUploader
             labelTitle="Subir imagen de perfil"
             buttonLabel="Subir imagen"
@@ -134,20 +140,41 @@ const GroupModalContainer = ({
             onChange={handleFileChange}
           />
         </Column>
-        <Column lg={16}>
-          <div role="group" aria-label="selectable tiles">
-            {friends.map((user) => (
-              <SelectableTile
-                className="chat"
-                onClick={() => addToChat(user.id)}
-              >
-                <h3>{user.username}</h3>
-              </SelectableTile>
-            ))}
+        <Column lg={16} md={8} sm={4}>
+          <div
+            className="friends-select-container"
+            role="group"
+            aria-label="selectable tiles"
+          >
+            <Grid>
+              {currentFriends.map((user) => (
+                <Column key={user.id} lg={5} md={4} sm={4}>
+                  <SelectableTile
+                    className="chat-selectable"
+                    selected={friendsSelected.includes(user.id)}
+                    onClick={() => addToChat(user.id)}
+                  >
+                    <img
+                      src={`http://localhost:3000/profile-image/${user.id}`}
+                    />
+                    <h3>{user.username}</h3>
+                  </SelectableTile>
+                </Column>
+              ))}
+            </Grid>
           </div>
         </Column>
-        <Column lg={13}></Column>
-        <Column lg={3}>
+        <Column lg={16} md={8} sm={4}>
+          <PaginationNav
+            className={`${friends.length > 0 ? "show" : "hidden"}`}
+            itemsShown={10}
+            totalItems={totalPages}
+            onChange={(page) => setCurrentPage(page)}
+            page={currentPage}
+          />
+        </Column>
+        <Column lg={13} md={0} sm={0}></Column>
+        <Column className="button-container" lg={3} md={8} sm={4}>
           <Button onClick={createGroup}>Crear grupo</Button>
         </Column>
       </Grid>
