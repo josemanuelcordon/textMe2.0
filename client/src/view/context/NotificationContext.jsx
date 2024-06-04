@@ -7,13 +7,14 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
   const addNotification = (notification) => {
+    console.log(notifications);
     setNotifications((prev) => [...prev, notification]);
   };
 
   const removeNotification = (notification) => {
     console.log(notification);
     setNotifications((prev) =>
-      prev.filter((not) => notification.id !== not.id)
+      prev.filter((noti) => notification.id !== noti.id)
     );
   };
 

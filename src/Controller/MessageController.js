@@ -9,7 +9,8 @@ const saveMessage = async (req, res) => {
     date,
     chat
   );
-  res.status(200).json({ created: true });
+  console.log("MENSAJE CREADO:", messageCreated);
+  res.status(200).json(messageCreated);
 };
 
 const getChatMessages = async (req, res) => {
@@ -31,8 +32,15 @@ const readMessages = async (req, res) => {
   res.status(200).json([]);
 };
 
+const deleteMessage = async (req, res) => {
+  const messageId = req.params.messageId;
+  await MessageService.deleteMessage(messageId);
+  res.status(200).json({ deleted: true });
+};
+
 export default {
   saveMessage,
   getChatMessages,
   readMessages,
+  deleteMessage,
 };

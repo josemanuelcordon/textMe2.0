@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
 import messageService from "../../service/messageService";
 import {
-  Button,
   Form,
   IconButton,
   Layer,
+  OverflowMenu,
+  OverflowMenuItem,
   TextArea,
   Tile,
   Toggletip,
   ToggletipButton,
   ToggletipContent,
-  Tooltip,
 } from "@carbon/react";
-import { SendFilled, Information } from "@carbon/icons-react";
+import { SendFilled, Information, QX } from "@carbon/icons-react";
+import { useNotifications } from "../context/NotificationContext";
+import { Notification } from "../../domain/Notification";
 
 const Chat = ({
   user,
@@ -24,7 +26,9 @@ const Chat = ({
   setMessages,
 }) => {
   const [message, setMessage] = useState({});
+  const [editText, setEditText] = useState(null);
   const messagesEndRef = useRef(null);
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -49,6 +53,27 @@ const Chat = ({
     });
 
     setChats(chatsRead);
+    const handleDeleteMessage = (messageId) => {
+      setMessages((prev) => prev.filter((m) => m.id !== messageId));
+      addNotification(new Notification("Mensaje borrado", "success"));
+    };
+
+    const handleUpdateMessage = (message) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === message.id ? { ...msg, ...message } : msg
+        )
+      );
+      addNotification(new Notification("Mensaje actualizado", "success"));
+    };
+
+    socket.on("deleteMessage", handleDeleteMessage);
+    socket.on("updateMessage", handleUpdateMessage);
+
+    return () => {
+      socket.off("deleteMessage", handleDeleteMessage);
+      socket.off("updateMessage", handleUpdateMessage);
+    };
   }, [chat]);
 
   useEffect(() => {
@@ -61,7 +86,7 @@ const Chat = ({
     setMessage({ ...message, content: e.target.value });
   };
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     if (!message.content || message.content.trim() === "") return;
 
@@ -72,9 +97,10 @@ const Chat = ({
       chat: chat.id,
     };
 
-    messageService.sendMessage(messageToSend);
+    const messageCreated = await messageService.sendMessage(messageToSend);
+    console.log(messageCreated);
     if (socket) {
-      socket.emit("sendMessage", messageToSend);
+      socket.emit("sendMessage", messageCreated);
     }
     // Vaciar el texto del textarea después de enviar el mensaje
     setMessage({ ...message, content: "" });
@@ -85,6 +111,30 @@ const Chat = ({
       e.preventDefault();
       sendMessage(e);
     }
+  };
+
+  const onEditMessage = (messageToEdit) => {
+    setEditText({ ...messageToEdit });
+  };
+
+  const updateMessage = (e) => {
+    e.preventDefault();
+    socket.emit("updateMessage", editText);
+    setEditText(null);
+  };
+
+  const cancelEdit = () => {
+    setEditText(null);
+  };
+
+  const updateMessageContent = (e) => {
+    setEditText({ ...editText, content: e.target.value });
+  };
+
+  const deleteMessage = async (message) => {
+    console.log(message);
+    await messageService.deleteMessage(message.id);
+    socket.emit("deleteMessage", message);
   };
 
   return (
@@ -102,55 +152,83 @@ const Chat = ({
                 <Information />
               </ToggletipButton>
               <ToggletipContent>
-                <p>
-                  {chat.participants.map((user) => (
-                    <p>{user.username}</p>
-                  ))}
-                </p>
+                {chat.participants.map((user, index) => (
+                  <p key={index}>{user.username}</p>
+                ))}
+                <br />
               </ToggletipContent>
             </Toggletip>
           )}
         </Tile>
       </Layer>
       <ul className="messages--container">
-        {messages.map((message, index) => (
+        {messages.map((messageToList, index) => (
           <li
             className={`message-container ${
-              message.sender === user.id ? "sent" : ""
+              messageToList.sender === user.id ? "sent" : ""
             }`}
             key={index}
           >
-            <Toggletip align={message.sender === user.id ? "left" : "right"}>
+            <Toggletip
+              align={messageToList.sender === user.id ? "left" : "right"}
+            >
               <ToggletipButton label="Show information">
                 <img
-                  src={`http://localhost:3000/profile-image/${message.sender}`}
+                  src={`http://localhost:3000/profile-image/${messageToList.sender}`}
                 />
               </ToggletipButton>
               <ToggletipContent>
-                <p>{message.user?.username}</p>
+                <p>{messageToList.user?.username ?? user.username}</p>
               </ToggletipContent>
             </Toggletip>
-
+            {messageToList.sender === user.id && (
+              <OverflowMenu
+                iconDescription=""
+                size="sm"
+                menuOffset={{ left: -60 }}
+              >
+                <OverflowMenuItem
+                  onClick={() => onEditMessage(messageToList)}
+                  itemText="Editar mensaje"
+                ></OverflowMenuItem>
+                <OverflowMenuItem
+                  onClick={() => deleteMessage(messageToList)}
+                  itemText="Eliminar mensaje"
+                  isDelete
+                ></OverflowMenuItem>
+              </OverflowMenu>
+            )}
             <p
               className={`${
-                message.sender === user.id ? "message-sent" : "message-received"
+                messageToList.sender === user.id
+                  ? "message-sent"
+                  : "message-received"
               } message`}
             >
-              {message.content}
+              {messageToList.content}
             </p>
           </li>
         ))}
         <div ref={messagesEndRef} />
       </ul>
-      <Form onSubmit={sendMessage} className="messages-inputs--container">
+      <Form
+        onSubmit={editText ? updateMessage : sendMessage}
+        className="messages-inputs--container"
+      >
         <TextArea
-          value={message.content || ""}
-          onChange={fillMessage}
+          labelText={editText ? "Editando" : ""}
+          value={editText ? editText.content : message.content || ""}
+          onChange={editText ? updateMessageContent : fillMessage}
           onKeyDown={handleKeyPress}
         ></TextArea>
         <button type="submit" className="send-button">
           <SendFilled />
         </button>
+        {editText && (
+          <button type="button" onClick={cancelEdit} className="cancel-button">
+            <QX />
+          </button>
+        )}
       </Form>
     </>
   );

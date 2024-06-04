@@ -61,16 +61,16 @@ const ChatList = ({
   return (
     <nav className="chat--list">
       <section className="tags">
-        <Tag size="lg" title="Grupo" type="blue" onClick={resetSortedChats}>
+        <Tag size="md" title="Grupo" type="blue" onClick={resetSortedChats}>
           Todos
         </Tag>
-        <Tag size="lg" title="Grupo" type="red" onClick={filterPrivateChats}>
+        <Tag size="md" title="Grupo" type="red" onClick={filterPrivateChats}>
           Privado
         </Tag>
-        <Tag size="lg" title="Grupo" type="green" onClick={filterGroupChats}>
+        <Tag size="md" title="Grupo" type="green" onClick={filterGroupChats}>
           Grupo
         </Tag>
-        <Tag size="lg" title="Grupo" type="purple" onClick={filterUnreadChats}>
+        <Tag size="md" title="Grupo" type="purple" onClick={filterUnreadChats}>
           No leidos
         </Tag>
       </section>

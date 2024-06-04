@@ -15,6 +15,7 @@ router.post("/login", AuthController.login);
 
 router.post("/send", MessageController.saveMessage);
 router.get("/messages/:chatId/:userId", MessageController.getChatMessages);
+router.delete("/message/:messageId", MessageController.deleteMessage);
 router.get("/read/:chatId/:userId", MessageController.readMessages);
 
 router.get("/chats/:userId", ChatController.getUserChats);

@@ -8,7 +8,7 @@ const saveMessage = async (sender, content, date, chat) => {
     chat: chat,
   };
 
-  await messageRepository.saveMessage(message);
+  return await messageRepository.saveMessage(message);
 };
 
 const getChatMessages = async (chatId) => {
@@ -28,9 +28,14 @@ const readMessages = async (chatId, userId) => {
   await messageRepository.readMessages(chatId, userId);
 };
 
+const deleteMessage = async (messageId) => {
+  await messageRepository.deleteMessage(messageId);
+};
+
 export default {
   saveMessage,
   getChatMessages,
   getMessageInfoByChat,
   readMessages,
+  deleteMessage,
 };

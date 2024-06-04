@@ -7,7 +7,7 @@ const sendMessage = async (message) => {
     body: JSON.stringify(message),
   });
 
-  return response.ok;
+  return await response.json();
 };
 
 const getChatMessages = async (chatId, userId) => {
@@ -24,8 +24,15 @@ const readMessages = async (chatId, userId) => {
   );
 };
 
+const deleteMessage = async (messageId) => {
+  const response = await fetch(`http://localhost:3000/message/${messageId}`, {
+    method: "DELETE",
+  });
+};
+
 export default {
   sendMessage,
   getChatMessages,
   readMessages,
+  deleteMessage,
 };

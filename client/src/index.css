@@ -67,7 +67,7 @@ body {
 .message-container {
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: 16px;
 }
 
 .message-container img {
@@ -86,9 +86,26 @@ body {
   padding: 10px 20px;
   color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  max-width: calc(100% - 68px);
+  max-width: calc(100% - 110px);
   word-wrap: break-word;
   white-space: pre-wrap;
+}
+
+.cancel-button {
+  position: absolute;
+  top: 0px;
+  right: 50px;
+  height: 20px;
+  width: 20px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  border: none;
+  background-color: brown;
+}
+
+.messages-inputs--container {
+  position: relative;
 }
 
 .message-sent {
@@ -505,10 +522,8 @@ body {
   align-items: center;
 }
 
-.button-container .cds--form-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.cds--overflow-menu-options::after {
+  background-color: transparent;
 }
 
 @media (max-width: 1055px) {

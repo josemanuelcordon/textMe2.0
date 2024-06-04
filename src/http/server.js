@@ -30,7 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
   })
 );
 app.use(router);
@@ -53,6 +53,14 @@ io.on("connection", async (socket) => {
   socket.on("readMessages", async ({ chat, user }) => {
     console.log("mensajes leidos");
     await MessageService.readMessages(chat, user);
+  });
+
+  socket.on("updateMessage", async (message) => {
+    io.in(`chat-${message.chat}`).emit("updateMessage", message);
+  });
+
+  socket.on("deleteMessage", async (message) => {
+    io.in(`chat-${message.chat}`).emit("deleteMessage", message.id);
   });
 
   socket.on("sendMessage", async (message) => {
