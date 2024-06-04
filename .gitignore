@@ -11,12 +11,15 @@ node_modules
 dist
 dist-ssr
 *.local
-uploads/*
 
+uploads/*
 client/node_modules
+node_modules/*
 writable/*
 writable/db_data/*
 !writable/db_data
+!.gitignore
+!.gitkeep
 
 # Editor directories and files
 .vscode/*
