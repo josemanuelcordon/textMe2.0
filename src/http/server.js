@@ -1,5 +1,7 @@
 import express from "express";
 import http from "http";
+import https from "https";
+import fs from "fs";
 import cors from "cors";
 import path from "path";
 import { Server } from "socket.io";
@@ -13,10 +15,19 @@ import MessageService from "../Service/MessageService.js";
 const userSockets = new Map();
 
 const __dirname = path.resolve();
-
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
+
+// Cargar certificados SSL
+const privateKey = fs.readFileSync("/usr/src/app/ssl/private.key", "utf8");
+const certificate = fs.readFileSync("/usr/src/app/ssl/certificate.crt", "utf8");
+const credentials = { key: privateKey, cert: certificate };
+
+// Servidor HTTP para desarrollo
+const httpServer = http.createServer(app);
+// Servidor HTTPS para producción
+const httpsServer = https.createServer(credentials, app);
+
+const io = new Server(httpsServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -25,7 +36,7 @@ const io = new Server(server, {
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "client")));
+app.use(express.static(path.join(__dirname, "public", "client")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
@@ -34,6 +45,15 @@ app.use(
   })
 );
 app.use(router);
+
+// Redirigir HTTP a HTTPS en producción
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && req.protocol === "http") {
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  } else {
+    next();
+  }
+});
 
 io.on("connection", async (socket) => {
   console.log("Connection completed");
@@ -91,7 +111,14 @@ io.on("connection", async (socket) => {
   });
 });
 
-const port = process.env.PORT || 3000;
-server.listen(port, (req, res) => {
-  console.log(`Server running on port ${port}`);
+// Escucha en ambos puertos
+const portHttp = 80;
+const portHttps = 443;
+
+httpServer.listen(portHttp, () => {
+  console.log(`HTTP Server running on port ${portHttp}`);
+});
+
+httpsServer.listen(portHttps, () => {
+  console.log(`HTTPS Server running on port ${portHttps}`);
 });

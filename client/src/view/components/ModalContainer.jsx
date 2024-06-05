@@ -13,6 +13,7 @@ import ChatService from "../../service/ChatService";
 import { Notification } from "../../domain/Notification";
 import { useNotifications } from "../context/NotificationContext";
 
+const apiUrl = import.meta.env.VITE_API_URL;
 const USERS_SHOWN = 6;
 
 const ModalContainer = ({
@@ -98,9 +99,7 @@ const ModalContainer = ({
                       createChat(userToList.id, userToList.username)
                     }
                   >
-                    <img
-                      src={`http://localhost:3000/profile-image/${userToList.id}`}
-                    />
+                    <img src={`${apiUrl}/profile-image/${userToList.id}`} />
                     <h3>{userToList.username}</h3>
                   </Tile>
                 );

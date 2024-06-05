@@ -15,6 +15,7 @@ import { Notification } from "../../domain/Notification";
 import { useNotifications } from "../context/NotificationContext";
 
 const USERS_SHOWN = 3;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const GroupModalContainer = ({
   open,
@@ -88,7 +89,7 @@ const GroupModalContainer = ({
       );
       formData.append("image", renamedFile);
       try {
-        await fetch("http://localhost:3000/upload/chat-image", {
+        await fetch(`${apiUrl}/upload/chat-image`, {
           method: "POST",
           body: formData,
         });
@@ -161,7 +162,7 @@ const GroupModalContainer = ({
                 selected={friendsSelected.includes(user.id)}
                 onClick={() => addToChat(user.id)}
               >
-                <img src={`http://localhost:3000/profile-image/${user.id}`} />
+                <img src={`${apiUrl}/profile-image/${user.id}`} />
                 <h3>{user.username}</h3>
               </SelectableTile>
             ))}

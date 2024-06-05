@@ -21,6 +21,7 @@ writable/db_data/*
 !writable/db_data
 !.gitignore
 !.gitkeep
+ssl/*
 
 # Editor directories and files
 .vscode/*

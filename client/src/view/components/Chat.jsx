@@ -16,6 +16,8 @@ import { SendFilled, Information, QX } from "@carbon/icons-react";
 import { useNotifications } from "../context/NotificationContext";
 import { Notification } from "../../domain/Notification";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const Chat = ({
   user,
   chat,
@@ -143,7 +145,7 @@ const Chat = ({
         <Tile className="chat--header">
           <img
             className="chat--image"
-            src={`http://localhost:3000/chat-image/${chat.id}/${user.id}`}
+            src={`${apiUrl}/chat-image/${chat.id}/${user.id}`}
           />
           <h2>{chat.name}</h2>
           {chat.group_chat && (
@@ -173,9 +175,7 @@ const Chat = ({
               align={messageToList.sender === user.id ? "left" : "right"}
             >
               <ToggletipButton label="Show information">
-                <img
-                  src={`http://localhost:3000/profile-image/${messageToList.sender}`}
-                />
+                <img src={`${apiUrl}/profile-image/${messageToList.sender}`} />
               </ToggletipButton>
               <ToggletipContent>
                 <p>{messageToList.user?.username ?? user.username}</p>

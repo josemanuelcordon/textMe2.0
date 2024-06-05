@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import ChatService from "../../service/ChatService.js";
 import { Tile, Tag } from "@carbon/react";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const ChatList = ({
   chats,
   setChats,
@@ -87,7 +89,7 @@ const ChatList = ({
                 <section className="chat-image--section">
                   <img
                     style={{ width: "64px", height: "64px" }}
-                    src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                    src={`${apiUrl}/chat-image/${chatToList.id}/${user.id}`}
                   />
                 </section>
                 <section className="chat-info--section">
@@ -120,7 +122,7 @@ const ChatList = ({
                 <section className="chat-image--section">
                   <img
                     style={{ width: "64px", height: "64px" }}
-                    src={`http://localhost:3000/chat-image/${chatToList.id}/${user.id}`}
+                    src={`${apiUrl}/chat-image/${chatToList.id}/${user.id}`}
                   />
                 </section>
                 <section className="chat-info--section">

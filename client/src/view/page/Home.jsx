@@ -52,7 +52,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    socket = io("ws://localhost:3000");
+    socket = io("wss://localhost");
     socket.on("connect", () => {
       console.log("Conectado al servidor WebSocket", socket);
       socket.emit("subscribeToChats", user.id);

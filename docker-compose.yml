@@ -4,11 +4,14 @@ services:
   node-app:
     build: .
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
     depends_on:
       - database
     volumes:
       - ./:/usr/src/app
+    environment:
+      - NODE_ENV=production
 
   database:
     image: mariadb

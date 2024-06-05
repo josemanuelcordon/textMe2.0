@@ -7,13 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../context/NotificationContext";
 import { Notification } from "../../domain/Notification";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const Profile = () => {
   const { user, enableAccount, unableAccount } = useAuth();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [friends, setFriends] = useState([]);
   const [profileImage, setProfileImage] = useState(
-    `http://localhost:3000/profile-image/${user.id}`
+    `${apiUrl}/profile-image/${user.id}`
   );
 
   const { addNotification } = useNotifications();
@@ -42,18 +44,13 @@ const Profile = () => {
     formData.append("image", selectedFile);
     try {
       setProfileImage("");
-      const response = await fetch(
-        "http://localhost:3000/upload/profile-image",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${apiUrl}/upload/profile-image`, {
+        method: "POST",
+        body: formData,
+      });
       setTimeout(() => {
         setProfileImage(
-          `http://localhost:3000/profile-image/${
-            user.id
-          }?timestamp=${new Date().getTime()}`
+          `${apiUrl}/profile-image/${user.id}?timestamp=${new Date().getTime()}`
         );
         addNotification(
           new Notification("Imagen cambiada con éxito", "success")
@@ -61,9 +58,7 @@ const Profile = () => {
       }, [5000]);
     } catch (error) {
       setProfileImage(
-        `http://localhost:3000/profile-image/${
-          user.id
-        }?timestamp=${new Date().getTime()}`
+        `${apiUrl}/profile-image/${user.id}?timestamp=${new Date().getTime()}`
       );
       addNotification(new Notification("Error al subir la imagen", "error"));
     }
@@ -158,9 +153,7 @@ const Profile = () => {
                   return (
                     <Layer>
                       <Tile className="friend-card" key={friend.id}>
-                        <img
-                          src={`http://localhost:3000/profile-image/${friend.id}`}
-                        />
+                        <img src={`${apiUrl}/profile-image/${friend.id}`} />
                         <h4>{friend.username}</h4>
                       </Tile>
                     </Layer>
