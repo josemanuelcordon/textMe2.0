@@ -89,10 +89,13 @@ const GroupModalContainer = ({
       );
       formData.append("image", renamedFile);
       try {
-        await fetch(`${apiUrl}/upload/chat-image`, {
-          method: "POST",
-          body: formData,
-        });
+        await fetch(
+          `${window.location.protocol}//${window.location.hostname}/upload/chat-image`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
       } catch (error) {
         console.error("Error al subir la imagen", error);
         alert("Error al subir la imagen");
@@ -162,7 +165,9 @@ const GroupModalContainer = ({
                 selected={friendsSelected.includes(user.id)}
                 onClick={() => addToChat(user.id)}
               >
-                <img src={`${apiUrl}/profile-image/${user.id}`} />
+                <img
+                  src={`${window.location.protocol}//${window.location.hostname}/profile-image/${user.id}`}
+                />
                 <h3>{user.username}</h3>
               </SelectableTile>
             ))}

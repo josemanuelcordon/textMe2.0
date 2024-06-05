@@ -145,7 +145,7 @@ const Chat = ({
         <Tile className="chat--header">
           <img
             className="chat--image"
-            src={`${apiUrl}/chat-image/${chat.id}/${user.id}`}
+            src={`${window.location.protocol}//${window.location.hostname}/chat-image/${chat.id}/${user.id}`}
           />
           <h2>{chat.name}</h2>
           {chat.group_chat && (
@@ -175,7 +175,9 @@ const Chat = ({
               align={messageToList.sender === user.id ? "left" : "right"}
             >
               <ToggletipButton label="Show information">
-                <img src={`${apiUrl}/profile-image/${messageToList.sender}`} />
+                <img
+                  src={`${window.location.protocol}//${window.location.hostname}/profile-image/${messageToList.sender}`}
+                />
               </ToggletipButton>
               <ToggletipContent>
                 <p>{messageToList.user?.username ?? user.username}</p>

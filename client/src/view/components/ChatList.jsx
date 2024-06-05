@@ -89,7 +89,7 @@ const ChatList = ({
                 <section className="chat-image--section">
                   <img
                     style={{ width: "64px", height: "64px" }}
-                    src={`${apiUrl}/chat-image/${chatToList.id}/${user.id}`}
+                    src={`${window.location.protocol}//${window.location.hostname}/chat-image/${chatToList.id}/${user.id}`}
                   />
                 </section>
                 <section className="chat-info--section">
@@ -122,7 +122,7 @@ const ChatList = ({
                 <section className="chat-image--section">
                   <img
                     style={{ width: "64px", height: "64px" }}
-                    src={`${apiUrl}/chat-image/${chatToList.id}/${user.id}`}
+                    src={`${window.location.protocol}//${window.location.hostname}/chat-image/${chatToList.id}/${user.id}`}
                   />
                 </section>
                 <section className="chat-info--section">

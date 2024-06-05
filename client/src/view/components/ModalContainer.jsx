@@ -99,7 +99,9 @@ const ModalContainer = ({
                       createChat(userToList.id, userToList.username)
                     }
                   >
-                    <img src={`${apiUrl}/profile-image/${userToList.id}`} />
+                    <img
+                      src={`${window.location.protocol}//${window.location.hostname}/profile-image/${userToList.id}`}
+                    />
                     <h3>{userToList.username}</h3>
                   </Tile>
                 );

@@ -15,7 +15,7 @@ const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [friends, setFriends] = useState([]);
   const [profileImage, setProfileImage] = useState(
-    `${apiUrl}/profile-image/${user.id}`
+    `${window.location.protocol}//${window.location.hostname}/profile-image/${user.id}`
   );
 
   const { addNotification } = useNotifications();
@@ -44,13 +44,18 @@ const Profile = () => {
     formData.append("image", selectedFile);
     try {
       setProfileImage("");
-      const response = await fetch(`${apiUrl}/upload/profile-image`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${window.location.protocol}//${window.location.hostname}/upload/profile-image`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       setTimeout(() => {
         setProfileImage(
-          `${apiUrl}/profile-image/${user.id}?timestamp=${new Date().getTime()}`
+          `${window.location.protocol}//${
+            window.location.hostname
+          }/profile-image/${user.id}?timestamp=${new Date().getTime()}`
         );
         addNotification(
           new Notification("Imagen cambiada con éxito", "success")
@@ -58,7 +63,9 @@ const Profile = () => {
       }, [5000]);
     } catch (error) {
       setProfileImage(
-        `${apiUrl}/profile-image/${user.id}?timestamp=${new Date().getTime()}`
+        `${window.location.protocol}//${
+          window.location.hostname
+        }/profile-image/${user.id}?timestamp=${new Date().getTime()}`
       );
       addNotification(new Notification("Error al subir la imagen", "error"));
     }
@@ -153,7 +160,9 @@ const Profile = () => {
                   return (
                     <Layer>
                       <Tile className="friend-card" key={friend.id}>
-                        <img src={`${apiUrl}/profile-image/${friend.id}`} />
+                        <img
+                          src={`${window.location.protocol}//${window.location.hostname}/profile-image/${friend.id}`}
+                        />
                         <h4>{friend.username}</h4>
                       </Tile>
                     </Layer>
