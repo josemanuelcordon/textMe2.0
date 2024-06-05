@@ -1,12 +1,14 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const getUserChats = async (userId) => {
-  const url = `http://localhost:3000/chats/${userId}`;
+  const url = `${apiUrl}/chats/${userId}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
 };
 
 const createChat = async (sender, receiver) => {
-  const url = `http://localhost:3000/chat/create`;
+  const url = `${apiUrl}/chat/create`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -22,7 +24,7 @@ const createChat = async (sender, receiver) => {
 };
 
 const createGroupChat = async (creator, members, groupName) => {
-  const url = `http://localhost:3000/group-chat/create`;
+  const url = `${apiUrl}/group-chat/create`;
   const response = await fetch(url, {
     method: "POST",
     headers: {

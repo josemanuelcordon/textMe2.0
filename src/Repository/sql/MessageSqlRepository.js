@@ -134,10 +134,24 @@ const deleteMessage = async (messageId) => {
   }
 };
 
+const updateMessage = async (messageId, content) => {
+  const query = "UPDATE `message` SET `content` =? WHERE `id` =?";
+  try {
+    const dbConnection = await mysql.connect();
+    await dbConnection.query(query, [content, messageId]);
+    await dbConnection.end();
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export default {
   saveMessage,
   getChatMessages,
   getMessageInfoByChat,
   readMessages,
   deleteMessage,
+  updateMessage,
 };

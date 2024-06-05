@@ -27,8 +27,22 @@ const createUser = async (req, res) => {
   }
 };
 
+const enableAccount = async (req, res) => {
+  const userId = req.params.userId;
+  await UserService.enableAccount(userId);
+  res.status(200).end();
+};
+
+const unableAccount = async (req, res) => {
+  const userId = req.params.userId;
+  await UserService.unableAccount(userId);
+  res.status(200).end();
+};
+
 export default {
   getUsersByUsername,
   getUserFriends,
   createUser,
+  enableAccount,
+  unableAccount,
 };

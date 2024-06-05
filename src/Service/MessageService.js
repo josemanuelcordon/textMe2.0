@@ -32,10 +32,15 @@ const deleteMessage = async (messageId) => {
   await messageRepository.deleteMessage(messageId);
 };
 
+const updateMessage = async (messageId, content) => {
+  return await messageRepository.updateMessage(messageId, content);
+};
+
 export default {
   saveMessage,
   getChatMessages,
   getMessageInfoByChat,
   readMessages,
   deleteMessage,
+  updateMessage,
 };

@@ -85,7 +85,11 @@ const ModalContainer = ({
         <Column lg={16} md={8} sm={4}>
           <ul className="friend--list">
             {currentChats.map((userToList) => {
-              if (userToList.username !== user.username) {
+              if (
+                userToList.username !== user.username &&
+                userToList.active === 1 &&
+                userToList.is_banned === 0
+              ) {
                 return (
                   <Tile
                     key={userToList.id} // Asegúrate de usar una clave única para cada elemento

@@ -24,6 +24,14 @@ const createUser = async (username, email, password) => {
   return await UserRepository.createUser(username, email, password);
 };
 
+const enableAccount = async (userId) => {
+  return await UserRepository.enableAccount(userId);
+};
+
+const unableAccount = async (userId) => {
+  return await UserRepository.unableAccount(userId);
+};
+
 export default {
   getUsersByUsername,
   getUserIdsByChat,
@@ -31,4 +39,6 @@ export default {
   getUserFriends,
   getChatParticipantsExceptMe,
   createUser,
+  enableAccount,
+  unableAccount,
 };

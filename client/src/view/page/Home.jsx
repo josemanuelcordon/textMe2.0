@@ -67,7 +67,7 @@ const Home = () => {
       setSortedChats([]);
       if (message.sender !== user.id) {
         addNotification(
-          new Notification(`Mensaje recibido! \n ${message.content}`, "info")
+          new Notification(`Mensaje recibido: \n ${message.content}`, "info")
         );
       }
       if (message.chat === chat?.id) {

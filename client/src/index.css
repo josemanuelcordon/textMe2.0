@@ -104,6 +104,13 @@ body {
   background-color: brown;
 }
 
+.login-error {
+  font-weight: 700;
+  height: 50px;
+  color: red;
+  text-align: center;
+}
+
 .messages-inputs--container {
   position: relative;
 }
@@ -438,8 +445,14 @@ body {
 
 .friend-card {
   display: flex;
+  align-items: center;
   gap: 32px;
   margin-bottom: 8px;
+}
+
+.friend-card > img {
+  height: 46px;
+  width: 46px;
 }
 
 .side-nav {
@@ -478,7 +491,7 @@ body {
 .tags {
   padding: 8px;
   display: flex;
-  gap: 16px;
+  gap: 2px;
 }
 
 .search-button-container {
@@ -501,8 +514,11 @@ body {
 }
 
 .chat-selectable {
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 60vw;
+  padding: 16px;
+  overflow: hidden;
+  background-color: #e9e5e5;
 }
 
 .chat-selectable img {
@@ -593,6 +609,9 @@ body {
   .profile-info--container {
     padding-top: 16px;
   }
+  .chat--list {
+    height: 90%;
+  }
 }
 
 @media (1055px < width < 1200px) {
@@ -617,10 +636,6 @@ body {
 
   .chat-list-column {
     height: calc(100vh - 48px);
-  }
-
-  .chat--list {
-    height: 100%;
   }
 
   .chat--grid--column {

@@ -8,7 +8,7 @@ import { useNotifications } from "../context/NotificationContext";
 import { Notification } from "../../domain/Notification";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, enableAccount, unableAccount } = useAuth();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [friends, setFriends] = useState([]);
@@ -65,9 +65,20 @@ const Profile = () => {
           user.id
         }?timestamp=${new Date().getTime()}`
       );
-      console.error("Error al subir la imagen", error);
-      alert("Error al subir la imagen");
+      addNotification(new Notification("Error al subir la imagen", "error"));
     }
+  };
+
+  const onUnableAccount = async () => {
+    await UserService.unableAccount(user.id);
+    unableAccount();
+    addNotification(new Notification("Cuenta desactivada", "info"));
+  };
+
+  const onEnableAccount = async () => {
+    await UserService.enableAccount(user.id);
+    enableAccount();
+    addNotification(new Notification("Cuenta activada", "info"));
   };
 
   useEffect(() => {
@@ -113,9 +124,23 @@ const Profile = () => {
               <Tile className="profile-data">
                 <h2>{user.username}</h2>
                 <p>{user.email}</p>
-                <Button className="delete-account--button" kind="danger">
-                  Borrar cuenta
-                </Button>
+                {user.active ? (
+                  <Button
+                    className="delete-account--button"
+                    kind="danger"
+                    onClick={onUnableAccount}
+                  >
+                    Desactivar cuenta
+                  </Button>
+                ) : (
+                  <Button
+                    className="delete-account--button"
+                    kind="primary"
+                    onClick={onEnableAccount}
+                  >
+                    Activar cuenta
+                  </Button>
+                )}
                 <Layer>
                   <Tile>
                     <p>
@@ -134,7 +159,6 @@ const Profile = () => {
                     <Layer>
                       <Tile className="friend-card" key={friend.id}>
                         <img
-                          style={{ height: "32px" }}
                           src={`http://localhost:3000/profile-image/${friend.id}`}
                         />
                         <h4>{friend.username}</h4>

@@ -38,9 +38,17 @@ const deleteMessage = async (req, res) => {
   res.status(200).json({ deleted: true });
 };
 
+const updateMessage = async (req, res) => {
+  const messageId = req.params.messageId;
+  const content = req.body.content;
+  await MessageService.updateMessage(messageId, content);
+  res.status(200).json({ updated: true });
+};
+
 export default {
   saveMessage,
   getChatMessages,
   readMessages,
   deleteMessage,
+  updateMessage,
 };

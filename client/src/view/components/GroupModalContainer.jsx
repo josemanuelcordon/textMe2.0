@@ -11,6 +11,8 @@ import {
 import React, { useEffect, useState } from "react";
 import UserService from "../../service/UserService";
 import ChatService from "../../service/ChatService";
+import { Notification } from "../../domain/Notification";
+import { useNotifications } from "../context/NotificationContext";
 
 const USERS_SHOWN = 3;
 
@@ -28,6 +30,8 @@ const GroupModalContainer = ({
   const [selectedFile, setSelectedFile] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
 
+  const { addNotification } = useNotifications();
+
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -38,6 +42,7 @@ const GroupModalContainer = ({
   useEffect(() => {
     const getFriends = async () => {
       const friends = await UserService.getUserFriends(user.id);
+      console.log(friends);
       setFriends(friends);
     };
     if (open) {
@@ -96,6 +101,10 @@ const GroupModalContainer = ({
       setChat(chat);
       setOpen(false);
       socket.emit("createChat", chat.id);
+    } else {
+      addNotification(
+        new Notification("Selecciona un nombre para el grupo", "warning")
+      );
     }
   };
 
@@ -146,22 +155,16 @@ const GroupModalContainer = ({
             role="group"
             aria-label="selectable tiles"
           >
-            <Grid>
-              {currentFriends.map((user) => (
-                <Column key={user.id} lg={5} md={4} sm={4}>
-                  <SelectableTile
-                    className="chat-selectable"
-                    selected={friendsSelected.includes(user.id)}
-                    onClick={() => addToChat(user.id)}
-                  >
-                    <img
-                      src={`http://localhost:3000/profile-image/${user.id}`}
-                    />
-                    <h3>{user.username}</h3>
-                  </SelectableTile>
-                </Column>
-              ))}
-            </Grid>
+            {currentFriends.map((user) => (
+              <SelectableTile
+                className="chat-selectable"
+                selected={friendsSelected.includes(user.id)}
+                onClick={() => addToChat(user.id)}
+              >
+                <img src={`http://localhost:3000/profile-image/${user.id}`} />
+                <h3>{user.username}</h3>
+              </SelectableTile>
+            ))}
           </div>
         </Column>
         <Column lg={16} md={8} sm={4}>

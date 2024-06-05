@@ -16,6 +16,7 @@ router.post("/login", AuthController.login);
 router.post("/send", MessageController.saveMessage);
 router.get("/messages/:chatId/:userId", MessageController.getChatMessages);
 router.delete("/message/:messageId", MessageController.deleteMessage);
+router.put("/message/:messageId", MessageController.updateMessage);
 router.get("/read/:chatId/:userId", MessageController.readMessages);
 
 router.get("/chats/:userId", ChatController.getUserChats);
@@ -25,6 +26,8 @@ router.post("/group-chat/create", ChatController.createGroupChat);
 router.get("/user", UserController.getUsersByUsername);
 router.get("/user/:userId/friends", UserController.getUserFriends);
 router.post("/user/create", UserController.createUser);
+router.put("/user/:userId/enable", UserController.enableAccount);
+router.put("/user/:userId/unable", UserController.unableAccount);
 
 router.get("/profile-image/:userId", ImageController.getProfileImage);
 router.get("/chat-image/:chatId/:userId", ImageController.getChatImage);

@@ -55,7 +55,6 @@ const Chat = ({
     setChats(chatsRead);
     const handleDeleteMessage = (messageId) => {
       setMessages((prev) => prev.filter((m) => m.id !== messageId));
-      addNotification(new Notification("Mensaje borrado", "success"));
     };
 
     const handleUpdateMessage = (message) => {
@@ -64,7 +63,6 @@ const Chat = ({
           msg.id === message.id ? { ...msg, ...message } : msg
         )
       );
-      addNotification(new Notification("Mensaje actualizado", "success"));
     };
 
     socket.on("deleteMessage", handleDeleteMessage);
@@ -98,7 +96,6 @@ const Chat = ({
     };
 
     const messageCreated = await messageService.sendMessage(messageToSend);
-    console.log(messageCreated);
     if (socket) {
       socket.emit("sendMessage", messageCreated);
     }
@@ -117,10 +114,13 @@ const Chat = ({
     setEditText({ ...messageToEdit });
   };
 
-  const updateMessage = (e) => {
+  const updateMessage = async (e) => {
     e.preventDefault();
+    await messageService.updateMessage(editText.id, editText.content);
     socket.emit("updateMessage", editText);
     setEditText(null);
+
+    addNotification(new Notification("Mensaje actualizado", "success"));
   };
 
   const cancelEdit = () => {
@@ -132,9 +132,9 @@ const Chat = ({
   };
 
   const deleteMessage = async (message) => {
-    console.log(message);
     await messageService.deleteMessage(message.id);
     socket.emit("deleteMessage", message);
+    addNotification(new Notification("Mensaje borrado", "success"));
   };
 
   return (

@@ -50,7 +50,7 @@ const getUserInfoByChat = async (chatId, userId) => {
 
 const getUserFriends = async (userId) => {
   const query = `
-    SELECT DISTINCT u.id, u.username
+    SELECT DISTINCT u.id, u.username, u.active, u.is_banned
     FROM chat_participants cp
     JOIN chat c ON cp.id_chat = c.id
     JOIN users u ON cp.id_user = u.id
@@ -117,6 +117,22 @@ const createUser = async (username, email, password) => {
   }
 };
 
+const enableAccount = async (userId) => {
+  const query = "UPDATE `users` SET `active` = 1 WHERE `id` =?";
+  const dbConnection = await mysql.connect();
+
+  await dbConnection.execute(query, [userId]);
+  await dbConnection.end();
+};
+
+const unableAccount = async (userId) => {
+  const query = "UPDATE `users` SET `active` = 0 WHERE `id` =?";
+  const dbConnection = await mysql.connect();
+
+  await dbConnection.execute(query, [userId]);
+  await dbConnection.end();
+};
+
 export default {
   getUser,
   getUsersByUsername,
@@ -125,4 +141,6 @@ export default {
   getUserFriends,
   getChatParticipantsExceptMe,
   createUser,
+  enableAccount,
+  unableAccount,
 };

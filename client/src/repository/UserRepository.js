@@ -1,7 +1,7 @@
-const URL = "http://localhost:3000";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const authUser = async (username, password) => {
-  const response = await fetch(`${URL}/login`, {
+  const response = await fetch(`${apiUrl}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,19 +17,19 @@ const authUser = async (username, password) => {
 };
 
 const findUserByName = async (name) => {
-  const response = await fetch(`${URL}/user?name=${name}`);
+  const response = await fetch(`${apiUrl}/user?name=${name}`);
   const data = await response.json();
   return data;
 };
 
 const getUserFriends = async (id) => {
-  const response = await fetch(`${URL}/user/${id}/friends`);
+  const response = await fetch(`${apiUrl}/user/${id}/friends`);
   const friends = await response.json();
   return friends;
 };
 
 const createUser = async (username, email, password) => {
-  const response = await fetch(`${URL}/user/create`, {
+  const response = await fetch(`${apiUrl}/user/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,9 +49,31 @@ const createUser = async (username, email, password) => {
   return data;
 };
 
+const enableAccount = async (userId) => {
+  const response = await fetch(`${apiUrl}/user/${userId}/enable`, {
+    method: "PUT",
+  });
+
+  if (!response.ok) {
+    throw new Error("No se pudo habilitar la cuenta");
+  }
+};
+
+const unableAccount = async (userId) => {
+  const response = await fetch(`${apiUrl}/user/${userId}/unable`, {
+    method: "PUT",
+  });
+
+  if (!response.ok) {
+    throw new Error("No se pudo deshabilitar la cuenta");
+  }
+};
+
 export default {
   authUser,
   findUserByName,
   getUserFriends,
   createUser,
+  enableAccount,
+  unableAccount,
 };

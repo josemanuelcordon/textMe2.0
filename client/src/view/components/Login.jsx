@@ -16,16 +16,31 @@ import { ArrowRight } from "@carbon/icons-react";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await login({
-      username,
-      password,
-    });
-    navigate("/");
+    try {
+      await login({
+        username,
+        password,
+      });
+      navigate("/");
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const handleUsername = async (e) => {
+    setError("");
+    setUsername(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setError("");
+    setPassword(e.target.value);
   };
 
   return (
@@ -43,7 +58,7 @@ const Login = () => {
               placeholder="Nombre de usuario"
               labelText="Nombre de usuario"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsername}
             />
             <PasswordInput
               id="password"
@@ -51,8 +66,9 @@ const Login = () => {
               labelText="Contraseña"
               placeholder="Contraseña"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePassword}
             />
+            <p className="login-error">{error}</p>
             <section className="button--section">
               <Button
                 size="2xl"
