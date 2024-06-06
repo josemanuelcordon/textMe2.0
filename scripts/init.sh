@@ -9,6 +9,14 @@ chmod -R 777 writable/db_data
 # Imprimir mensaje de confirmación
 echo "Carpeta writable/db_data creada y permisos 777 asignados."
 
+cd client/
+
+npm run install
+
+npm run build
+
+cd ..
+
 sudo docker-compose down -v
 
 sudo docker-compose up --build

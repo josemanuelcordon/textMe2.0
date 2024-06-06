@@ -54,7 +54,6 @@ const Home = () => {
   useEffect(() => {
     socket = io(`wss://${window.location.hostname}`);
     socket.on("connect", () => {
-      console.log("Conectado al servidor WebSocket", socket);
       socket.emit("subscribeToChats", user.id);
     });
     return () => {

@@ -9,7 +9,6 @@ const saveMessage = async (req, res) => {
     date,
     chat
   );
-  console.log("MENSAJE CREADO:", messageCreated);
   res.status(200).json(messageCreated);
 };
 
