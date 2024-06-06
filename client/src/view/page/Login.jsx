@@ -1,14 +1,13 @@
 // Login.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   TextInput,
   Tile,
   PasswordInput,
   Button,
   Stack,
-  ButtonSet,
   Form,
 } from "@carbon/react";
 import { ArrowRight } from "@carbon/icons-react";
@@ -17,7 +16,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { login, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -27,7 +26,9 @@ const Login = () => {
         username,
         password,
       });
-      navigate("/");
+      const redirectPath = localStorage.getItem("redirectPath") || "/";
+      localStorage.removeItem("redirectPath");
+      navigate(redirectPath, { replace: true });
     } catch (e) {
       setError(e.message);
     }
@@ -42,6 +43,26 @@ const Login = () => {
     setError("");
     setPassword(e.target.value);
   };
+
+  useEffect(() => {
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    const token = getCookie("auth_token");
+    if (token) {
+      setUser(true);
+      const redirectPath = localStorage.getItem("redirectPath");
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+        localStorage.removeItem("redirectPath");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [navigate, setUser]);
 
   return (
     <main className="login-page">

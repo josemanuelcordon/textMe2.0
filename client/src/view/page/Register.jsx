@@ -54,6 +54,17 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  }
+
   const handleChange = (type) => (e) => {
     const value = e.target.value;
     let error = "";
@@ -67,8 +78,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const passwordHash = await hashPassword(state.password);
     try {
-      await UserService.createUser(state.username, state.email, state.password);
+      await UserService.createUser(state.username, state.email, passwordHash);
       navigate("/login");
     } catch (e) {
       setError(e.message);

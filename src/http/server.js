@@ -30,10 +30,11 @@ const httpServer = http.createServer(app);
 // Servidor HTTPS para producción
 const httpsServer = https.createServer(credentials, app);
 
-const io = new Server(httpServer, {
+const io = new Server(httpsServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -45,6 +46,7 @@ app.use(
   cors({
     origin: "*",
     methods: ["GET", "POST", "DELETE", "PUT"],
+    credentials: true,
   })
 );
 app.use(router);
