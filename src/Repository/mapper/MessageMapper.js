@@ -1,3 +1,5 @@
+import { Message } from "../../Model/Message.js";
+
 const toDto = (message) => {
   return {
     id: message.id,

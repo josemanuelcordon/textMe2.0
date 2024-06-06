@@ -1,4 +1,4 @@
-import { Chat } from "../../Model/Chat";
+import { Chat } from "../../Model/Chat.js";
 
 const toDto = (chat) => {
   return {

@@ -22,7 +22,7 @@ const ChatList = ({
       setChats(chatsResponse);
     };
     getChats();
-  }, [user]);
+  }, []);
 
   const openChat = (chat) => {
     if (isExpandable) {
@@ -41,7 +41,6 @@ const ChatList = ({
     const chatsCopy = [...chats];
     const privateChats = chatsCopy.filter((chat) => chat.group_chat === null);
     setSortedChats(privateChats);
-    console.log(chats);
   };
 
   const filterGroupChats = () => {

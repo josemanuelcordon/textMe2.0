@@ -6,3 +6,5 @@ function Message() {
   this.date = "";
   this.user = {};
 }
+
+export { Message };

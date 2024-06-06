@@ -17,7 +17,6 @@ const findUserByName = async (userName) => {
 
 const getUserFriends = async (userId) => {
   const friends = await UserRepository.getUserFriends(userId);
-  console.log(friends);
   return friends.filter(
     (friend) => friend.active === 1 && friend.is_banned === 0
   );

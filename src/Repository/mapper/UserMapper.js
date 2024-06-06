@@ -1,4 +1,4 @@
-import { User, USER_ROLE } from "../../Model/User";
+import { User, USER_ROLE } from "../../Model/User.js";
 
 const toDto = (user) => {
   return {

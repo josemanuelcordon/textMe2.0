@@ -43,7 +43,6 @@ const GroupModalContainer = ({
   useEffect(() => {
     const getFriends = async () => {
       const friends = await UserService.getUserFriends(user.id);
-      console.log(friends);
       setFriends(friends);
     };
     if (open) {

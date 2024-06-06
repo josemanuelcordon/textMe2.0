@@ -20,7 +20,7 @@ const getUser = async (username, password) => {
   ]);
   await dbConnection.end();
 
-  const userDto = rows[0] ?? null;
+  const userDto = results[0] ?? null;
   return UserMapper.toModel(userDto);
 };
 
@@ -110,14 +110,14 @@ const createUser = async (user) => {
     ]);
 
     // Obtener el usuario recién creado
-    const [userDto] = await dbConnection.query(getUserQuery, [result.insertId]);
+    const [rows] = await dbConnection.query(getUserQuery, [result.insertId]);
 
     // Cerrar la conexión
     await dbConnection.end();
 
     // Retornar el usuario creado
-    if (userRows.length > 0) {
-      const userDto = userRows[0];
+    if (rows.length > 0) {
+      const userDto = rows[0];
       return UserMapper.toModel(userDto);
     } else {
       return {};

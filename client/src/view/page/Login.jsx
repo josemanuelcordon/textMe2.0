@@ -44,25 +44,25 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  useEffect(() => {
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(";").shift();
-    }
+  // useEffect(() => {
+  //   function getCookie(name) {
+  //     const value = `; ${document.cookie}`;
+  //     const parts = value.split(`; ${name}=`);
+  //     if (parts.length === 2) return parts.pop().split(";").shift();
+  //   }
 
-    const token = getCookie("auth_token");
-    if (token) {
-      setUser(true);
-      const redirectPath = localStorage.getItem("redirectPath");
-      if (redirectPath) {
-        navigate(redirectPath, { replace: true });
-        localStorage.removeItem("redirectPath");
-      } else {
-        navigate("/");
-      }
-    }
-  }, [navigate, setUser]);
+  //   const token = getCookie("auth_token");
+  //   if (token) {
+  //     setUser(true);
+  //     const redirectPath = localStorage.getItem("redirectPath");
+  //     if (redirectPath) {
+  //       navigate(redirectPath, { replace: true });
+  //       localStorage.removeItem("redirectPath");
+  //     } else {
+  //       navigate("/");
+  //     }
+  //   }
+  // }, [navigate, setUser]);
 
   return (
     <main className="login-page">
