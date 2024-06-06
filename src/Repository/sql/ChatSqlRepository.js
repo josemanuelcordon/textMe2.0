@@ -1,4 +1,5 @@
 import mysql from "./db.js";
+import ChatMapper from "../mapper/ChatMapper.js";
 
 const getUserChats = async (userId) => {
   const query = `
@@ -11,7 +12,7 @@ const getUserChats = async (userId) => {
     const dbConnection = await mysql.connect();
     const [rows, fields] = await dbConnection.execute(query, [userId]);
     await dbConnection.end();
-    return rows ?? [];
+    return rows.map((dto) => ChatMapper.toModel(dto)) ?? [];
   } catch (error) {
     console.log(error);
     return [];
@@ -44,7 +45,8 @@ const createChat = async (sender, receiver) => {
     const [rows] = await dbConnection.execute(getChatQuery, [chatId]);
 
     await dbConnection.end();
-    return rows[0];
+    const chatDto = rows[0];
+    return ChatMapper.toModel(chatDto);
   } catch (error) {
     console.log(error);
     return null;
@@ -75,7 +77,8 @@ const createGroupChat = async (creator, members, name) => {
     const [rows] = await dbConnection.execute(getChatQuery, [chatId]);
 
     await dbConnection.end();
-    return rows[0];
+    const chatDto = rows[0];
+    return ChatMapper.toModel(chatDto);
   } catch (error) {
     console.log(error);
     return null;

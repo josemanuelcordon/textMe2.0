@@ -24,6 +24,7 @@ const login = async (req, res) => {
 
     // Condicionar la creación de la cookie basándose en si la solicitud es HTTPS
     if (isHTTPS) {
+      console.log("Es https?");
       res.cookie("auth_token", hashedUsername, {
         httpOnly: false,
         expires: new Date(Date.now() + 3600000),

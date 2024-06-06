@@ -1,4 +1,5 @@
 import mysql from "./db.js";
+import UserMapper from "../mapper/UserMapper.js";
 
 const getAllUsers = async () => {
   const query = "SELECT * FROM `users`";
@@ -17,18 +18,19 @@ const getUser = async (username, password) => {
     username,
     password,
   ]);
-
   await dbConnection.end();
-  return results[0];
+
+  const userDto = rows[0] ?? null;
+  return UserMapper.toModel(userDto);
 };
 
 const getUsersByUsername = async (username) => {
   const query = "SELECT * FROM `users` WHERE `username` LIKE ?";
   const dbConnection = await mysql.connect();
 
-  const [results, fields] = await dbConnection.query(query, [`${username}%`]);
+  const [userDtos, _] = await dbConnection.query(query, [`${username}%`]);
   await dbConnection.end();
-  return results;
+  return userDtos.map((dto) => UserMapper.toModel(dto));
 };
 
 const getUserIdsByChat = async (chatId) => {
@@ -73,10 +75,10 @@ const getUserFriends = async (userId) => {
   `;
   const dbConnection = await mysql.connect();
 
-  const [results, fields] = await dbConnection.query(query, [userId, userId]);
-  console.log("Amigos: ", results);
+  const [userDtos, _] = await dbConnection.query(query, [userId, userId]);
   await dbConnection.end();
-  return results;
+
+  return userDtos.map((dto) => UserMapper.toModel(dto));
 };
 
 const getChatParticipantsExceptMe = async (chatId, userId) => {
@@ -89,7 +91,8 @@ const getChatParticipantsExceptMe = async (chatId, userId) => {
   return results;
 };
 
-const createUser = async (username, email, password) => {
+const createUser = async (user) => {
+  const userDto = UserMapper.toDto(user);
   const query =
     "INSERT INTO `users` (`username`, `email`, `password`) VALUES (?, ?, ?)";
   const getUserQuery =
@@ -101,22 +104,21 @@ const createUser = async (username, email, password) => {
 
     // Insertar el usuario
     const [result] = await dbConnection.query(query, [
-      username,
-      email,
-      password,
+      userDto.username,
+      userDto.email,
+      userDto.password,
     ]);
 
     // Obtener el usuario recién creado
-    const [userRows] = await dbConnection.query(getUserQuery, [
-      result.insertId,
-    ]);
+    const [userDto] = await dbConnection.query(getUserQuery, [result.insertId]);
 
     // Cerrar la conexión
     await dbConnection.end();
 
     // Retornar el usuario creado
     if (userRows.length > 0) {
-      return userRows[0];
+      const userDto = userRows[0];
+      return UserMapper.toModel(userDto);
     } else {
       return {};
     }

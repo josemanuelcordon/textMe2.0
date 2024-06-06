@@ -1,4 +1,4 @@
-import messageRepository from "../Repository/sql/MessageSqlRepository.js";
+import { MessageRepository } from "../Repository/index.js";
 
 const saveMessage = async (sender, content, date, chat) => {
   const message = {
@@ -8,16 +8,16 @@ const saveMessage = async (sender, content, date, chat) => {
     chat: chat,
   };
 
-  return await messageRepository.saveMessage(message);
+  return await MessageRepository.saveMessage(message);
 };
 
 const getChatMessages = async (chatId) => {
-  const messages = await messageRepository.getChatMessages(chatId);
+  const messages = await MessageRepository.getChatMessages(chatId);
   return messages;
 };
 
 const getMessageInfoByChat = async (chatId, userId) => {
-  const messageInfo = await messageRepository.getMessageInfoByChat(
+  const messageInfo = await MessageRepository.getMessageInfoByChat(
     chatId,
     userId
   );
@@ -25,15 +25,15 @@ const getMessageInfoByChat = async (chatId, userId) => {
 };
 
 const readMessages = async (chatId, userId) => {
-  await messageRepository.readMessages(chatId, userId);
+  await MessageRepository.readMessages(chatId, userId);
 };
 
 const deleteMessage = async (messageId) => {
-  await messageRepository.deleteMessage(messageId);
+  await MessageRepository.deleteMessage(messageId);
 };
 
 const updateMessage = async (messageId, content) => {
-  return await messageRepository.updateMessage(messageId, content);
+  return await MessageRepository.updateMessage(messageId, content);
 };
 
 export default {

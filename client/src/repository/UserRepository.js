@@ -10,7 +10,6 @@ const authUser = async (username, password) => {
         username,
         password,
       }),
-      credentials: "include",
     }
   );
 

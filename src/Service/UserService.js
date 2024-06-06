@@ -1,4 +1,4 @@
-import UserRepository from "../Repository/sql/UserSqlRepository.js";
+import { UserRepository } from "../Repository/index.js";
 
 const getAllUsers = async () => {
   return await UserRepository.getAllUsers();

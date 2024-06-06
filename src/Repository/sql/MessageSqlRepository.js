@@ -1,6 +1,8 @@
 import mysql from "./db.js";
 import date from "date-and-time";
 
+import MessageMapper from "../mapper/MessageMapper.js";
+
 const saveMessage = async (message) => {
   const insertQuery =
     "INSERT INTO `message` (`sender`, `chat`, `date`, `content`) VALUES (?, ?, ?, ?)";
@@ -21,7 +23,8 @@ const saveMessage = async (message) => {
     await dbConnection.end();
 
     if (rows.length > 0) {
-      return rows[0];
+      const messageDto = rows[0];
+      return MessageMapper.toModel(messageDto);
     } else {
       throw new Error("Failed to retrieve the inserted message");
     }
@@ -58,22 +61,7 @@ const getChatMessages = async (chatId) => {
     if (rows.length === 0) {
       return [];
     } else {
-      const mappedRows = rows.map((message) => {
-        return {
-          id: message.message_id,
-          sender: message.sender,
-          chat: message.chat,
-          content: message.content,
-          date: message.date,
-          user: {
-            id: message.user_id,
-            username: message.username,
-            email: message.email,
-          },
-        };
-      });
-      console.log("Filas mapeadas", mappedRows);
-      return mappedRows;
+      return rows.map(MessageMapper.toModel);
     }
   } catch (error) {
     console.log(error);
@@ -120,8 +108,6 @@ const readMessages = async (chatId, userId) => {
       chatId,
       userId,
     ]);
-
-    console.log("Mensajes para leer", messagesToRead);
 
     for (const message of messagesToRead) {
       await dbConnection.execute(query, [message.id, userId]);
