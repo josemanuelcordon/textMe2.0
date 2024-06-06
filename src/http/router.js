@@ -23,11 +23,14 @@ router.get("/chats/:userId", ChatController.getUserChats);
 router.post("/chat/create", ChatController.createChat);
 router.post("/group-chat/create", ChatController.createGroupChat);
 
+router.get("/users", UserController.getAllUsers);
 router.get("/user", UserController.getUsersByUsername);
 router.get("/user/:userId/friends", UserController.getUserFriends);
 router.post("/user/create", UserController.createUser);
 router.put("/user/:userId/enable", UserController.enableAccount);
 router.put("/user/:userId/unable", UserController.unableAccount);
+router.put("/user/:userId/ban", UserController.banUser);
+router.put("/user/:userId/disban", UserController.disbanUser);
 
 router.get("/profile-image/:userId", ImageController.getProfileImage);
 router.get("/chat-image/:chatId/:userId", ImageController.getChatImage);

@@ -1,16 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../page/Home";
-import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import RootPage from "../page/RootPage";
-import Login from "../components/Login";
+import Login from "../page/Login";
 import Profile from "../page/Profile";
-import Register from "../components/Register";
+import Register from "../page/Register";
+import Admin from "../page/Admin";
+import AdminChats from "../page/AdminChats";
+import AdminMessages from "../page/AdminMessages";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootPage />,
-    //errorElement: //<ErrorPage />,
+    // errorElement: //<ErrorPage />,
     children: [
       {
         element: <ProtectedRoute redirectPath="/login" />,
@@ -20,8 +23,20 @@ export const router = createBrowserRouter([
             element: <Home />,
           },
           {
-            path: "/profile",
+            path: "profile",
             element: <Profile />,
+          },
+          {
+            path: "admin",
+            element: <Admin />,
+          },
+          {
+            path: "admin/chats/:userId",
+            element: <AdminChats />,
+          },
+          {
+            path: "admin/chat/:chatId/messages",
+            element: <AdminMessages />,
           },
         ],
       },

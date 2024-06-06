@@ -1,5 +1,14 @@
 import mysql from "./db.js";
 
+const getAllUsers = async () => {
+  const query = "SELECT * FROM `users`";
+  const dbConnection = await mysql.connect();
+
+  const [results, fields] = await dbConnection.query(query);
+  await dbConnection.end();
+  return results;
+};
+
 const getUser = async (username, password) => {
   const query = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ?";
   const dbConnection = await mysql.connect();
@@ -133,7 +142,24 @@ const unableAccount = async (userId) => {
   await dbConnection.end();
 };
 
+const banUser = async (userId) => {
+  const query = "UPDATE `users` SET `is_banned` = 1 WHERE `id` =?";
+  const dbConnection = await mysql.connect();
+
+  await dbConnection.execute(query, [userId]);
+  await dbConnection.end();
+};
+
+const disbanUser = async (userId) => {
+  const query = "UPDATE `users` SET `is_banned` = 0 WHERE `id` =?";
+  const dbConnection = await mysql.connect();
+
+  await dbConnection.execute(query, [userId]);
+  await dbConnection.end();
+};
+
 export default {
+  getAllUsers,
   getUser,
   getUsersByUsername,
   getUserIdsByChat,
@@ -143,4 +169,6 @@ export default {
   createUser,
   enableAccount,
   unableAccount,
+  banUser,
+  disbanUser,
 };

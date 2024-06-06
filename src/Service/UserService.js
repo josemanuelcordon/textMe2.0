@@ -1,5 +1,9 @@
 import UserRepository from "../Repository/sql/UserSqlRepository.js";
 
+const getAllUsers = async () => {
+  return await UserRepository.getAllUsers();
+};
+
 const getUsersByUsername = async (username) => {
   return await UserRepository.getUsersByUsername(username);
 };
@@ -32,7 +36,16 @@ const unableAccount = async (userId) => {
   return await UserRepository.unableAccount(userId);
 };
 
+const banUser = async (userId) => {
+  return await UserRepository.banUser(userId);
+};
+
+const disbanUser = async (userId) => {
+  return await UserRepository.disbanUser(userId);
+};
+
 export default {
+  getAllUsers,
   getUsersByUsername,
   getUserIdsByChat,
   getUserInfoByChat,
@@ -41,4 +54,6 @@ export default {
   createUser,
   enableAccount,
   unableAccount,
+  banUser,
+  disbanUser,
 };

@@ -13,7 +13,6 @@ import ChatService from "../../service/ChatService";
 import { Notification } from "../../domain/Notification";
 import { useNotifications } from "../context/NotificationContext";
 
-const apiUrl = import.meta.env.VITE_API_URL;
 const USERS_SHOWN = 6;
 
 const ModalContainer = ({
@@ -89,11 +88,12 @@ const ModalContainer = ({
               if (
                 userToList.username !== user.username &&
                 userToList.active === 1 &&
-                userToList.is_banned === 0
+                userToList.is_banned === 0 &&
+                userToList.role !== "ADMIN"
               ) {
                 return (
                   <Tile
-                    key={userToList.id} // Asegúrate de usar una clave única para cada elemento
+                    key={userToList.id}
                     className="chat"
                     onClick={() =>
                       createChat(userToList.id, userToList.username)

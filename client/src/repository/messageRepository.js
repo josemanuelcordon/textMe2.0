@@ -1,5 +1,3 @@
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const sendMessage = async (message) => {
   const response = await fetch(
     `${window.location.protocol}//${window.location.hostname}/send`,

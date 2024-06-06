@@ -10,17 +10,14 @@ WORKDIR /usr/src/app
 # Copia los archivos del proyecto al contenedor
 COPY . .
 
-# Crea el directorio para los certificados SSL
-RUN mkdir -p /usr/src/app/ssl
-
 # Instala las dependencias del proyecto
 RUN npm install
 
 # Genera certificados SSL después de crear el directorio
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /usr/src/app/ssl/private.key \
-    -out /usr/src/app/ssl/certificate.crt \
-    -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=localhost"
+    -keyout /etc/ssl/private/private.key \
+    -out /etc/ssl/private/certificate.crt \
+    -subj "/C=ES/ST=Andalucía/L=Granada/O=IESHLanz/OU=WEB/CN=textMe"
 
 # Expone los puertos 80 y 443
 EXPOSE 80 443

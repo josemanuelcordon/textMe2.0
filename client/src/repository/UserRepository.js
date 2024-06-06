@@ -1,5 +1,3 @@
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const authUser = async (username, password) => {
   const response = await fetch(
     `${window.location.protocol}//${window.location.hostname}/login`,
@@ -15,6 +13,14 @@ const authUser = async (username, password) => {
     }
   );
 
+  const data = await response.json();
+  return data;
+};
+
+const getAllUsers = async () => {
+  const response = await fetch(
+    `${window.location.protocol}//${window.location.hostname}/users`
+  );
   const data = await response.json();
   return data;
 };
@@ -85,11 +91,40 @@ const unableAccount = async (userId) => {
   }
 };
 
+const banUser = async (userId) => {
+  const response = await fetch(
+    `${window.location.protocol}//${window.location.hostname}/user/${userId}/ban`,
+    {
+      method: "PUT",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("No se pudo banear al usuario");
+  }
+};
+
+const disbanUser = async (userId) => {
+  const response = await fetch(
+    `${window.location.protocol}//${window.location.hostname}/user/${userId}/disban`,
+    {
+      method: "PUT",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("No se pudo deshabilitar la cuenta");
+  }
+};
+
 export default {
   authUser,
+  getAllUsers,
   findUserByName,
   getUserFriends,
   createUser,
   enableAccount,
   unableAccount,
+  banUser,
+  disbanUser,
 };

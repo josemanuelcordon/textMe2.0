@@ -1,5 +1,3 @@
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const getUserChats = async (userId) => {
   const url = `${window.location.protocol}//${window.location.hostname}/chats/${userId}`;
   const response = await fetch(url);

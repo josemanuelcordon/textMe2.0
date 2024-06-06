@@ -3,14 +3,15 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Jun 05, 2024 at 06:48 PM
+-- Generation Time: Jun 06, 2024 at 04:00 PM
 -- Server version: 11.4.2-MariaDB-ubu2404
 -- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-USE textMe;
+USE texTMe;
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -81,8 +82,16 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `is_banned` tinyint(1) NOT NULL DEFAULT 0,
-  `active` tinyint(1) NOT NULL DEFAULT 1
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `role` enum('ADMIN','USER') NOT NULL DEFAULT 'USER'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `is_banned`, `active`, `role`) VALUES
+(1, 'jose', 'jose@gmail.com', '12345', 0, 1, 'ADMIN');
 
 --
 -- Indexes for dumped tables
@@ -121,19 +130,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

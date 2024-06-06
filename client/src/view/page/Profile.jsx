@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../context/NotificationContext";
 import { Notification } from "../../domain/Notification";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const Profile = () => {
   const { user, enableAccount, unableAccount } = useAuth();
   const navigate = useNavigate();

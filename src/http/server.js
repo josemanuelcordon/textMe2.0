@@ -15,11 +15,14 @@ import MessageService from "../Service/MessageService.js";
 const userSockets = new Map();
 
 const __dirname = path.resolve();
+const sslDir = path.join("/", "etc", "ssl", "private");
 const app = express();
-
 // Cargar certificados SSL
-const privateKey = fs.readFileSync("/usr/src/app/ssl/private.key", "utf8");
-const certificate = fs.readFileSync("/usr/src/app/ssl/certificate.crt", "utf8");
+const privateKey = fs.readFileSync(path.join(sslDir, "private.key"), "utf8");
+const certificate = fs.readFileSync(
+  path.join(sslDir, "certificate.crt"),
+  "utf8"
+);
 const credentials = { key: privateKey, cert: certificate };
 
 // Servidor HTTP para desarrollo
@@ -27,7 +30,7 @@ const httpServer = http.createServer(app);
 // Servidor HTTPS para producción
 const httpsServer = https.createServer(credentials, app);
 
-const io = new Server(httpsServer, {
+const io = new Server(httpServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -71,7 +74,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("readMessages", async ({ chat, user }) => {
-    console.log("mensajes leidos");
     await MessageService.readMessages(chat, user);
   });
 

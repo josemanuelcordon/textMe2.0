@@ -102,17 +102,26 @@ const getMessageInfoByChat = async (chatId, userId) => {
 };
 
 const readMessages = async (chatId, userId) => {
-  const queryMessagesToRead =
-    "SELECT * FROM `message` LEFT JOIN `message_read` ON id = id_message WHERE chat = ? AND sender != ? AND id_message IS NULL";
+  const queryMessagesToRead = `
+      SELECT m.id
+      FROM message m
+      LEFT JOIN message_read mr ON m.id = mr.id_message AND mr.id_user = ?
+      WHERE m.chat = ? AND m.sender != ?
+      GROUP BY m.id
+      HAVING COUNT(mr.id_user) = 0;
+    `;
   const query =
     "INSERT INTO `message_read` (`id_message`, `id_user`) VALUES (?, ?)";
   try {
     const dbConnection = await mysql.connect();
 
     const [messagesToRead] = await dbConnection.execute(queryMessagesToRead, [
+      userId,
       chatId,
       userId,
     ]);
+
+    console.log("Mensajes para leer", messagesToRead);
 
     for (const message of messagesToRead) {
       await dbConnection.execute(query, [message.id, userId]);

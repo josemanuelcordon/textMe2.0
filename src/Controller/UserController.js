@@ -1,5 +1,10 @@
 import UserService from "../Service/UserService.js";
 
+const getAllUsers = async (req, res) => {
+  const users = await UserService.getAllUsers();
+  res.status(200).json(users);
+};
+
 const getUsersByUsername = async (req, res) => {
   const username = req.query.name;
 
@@ -39,10 +44,25 @@ const unableAccount = async (req, res) => {
   res.status(200).end();
 };
 
+const banUser = async (req, res) => {
+  const userId = req.params.userId;
+  await UserService.banUser(userId);
+  res.status(200).end();
+};
+
+const disbanUser = async (req, res) => {
+  const userId = req.params.userId;
+  await UserService.disbanUser(userId);
+  res.status(200).end();
+};
+
 export default {
+  getAllUsers,
   getUsersByUsername,
   getUserFriends,
   createUser,
   enableAccount,
   unableAccount,
+  banUser,
+  disbanUser,
 };

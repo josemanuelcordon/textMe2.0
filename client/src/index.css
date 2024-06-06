@@ -542,6 +542,14 @@ body {
   background-color: transparent;
 }
 
+.user--list {
+  padding: 20px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 @media (max-width: 1055px) {
   body {
     padding: 0;
@@ -644,5 +652,12 @@ body {
 
   .chat--container {
     height: 100%;
+  }
+}
+
+@media (height < 800px) {
+  .login-page {
+    height: 100%;
+    min-height: 100vh;
   }
 }
