@@ -1,4 +1,5 @@
 import { Message } from "../../Model/Message.js";
+import date from "date-and-time";
 
 const toDto = (message) => {
   return {
@@ -18,8 +19,9 @@ const toModel = (messageDto) => {
   message.id = messageDto.id;
   message.sender = messageDto.sender;
   message.chat = messageDto.chat;
+  let messageDate = date.format(messageDto.date, "YYYY-MM-DD HH:mm");
+  message.date = messageDate;
   message.content = messageDto.content;
-  message.date = messageDto.date;
   message.user = {
     id: messageDto.user_id,
     username: messageDto.username,

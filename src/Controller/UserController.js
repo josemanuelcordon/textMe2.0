@@ -6,7 +6,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUsersByUsername = async (req, res) => {
-  const username = req.query.name;
+  let username = req.query.name;
 
   const users = await UserService.getUsersByUsername(username);
 

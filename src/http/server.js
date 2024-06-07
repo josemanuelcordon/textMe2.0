@@ -62,7 +62,6 @@ app.use((req, res, next) => {
 
 io.on("connection", async (socket) => {
   console.log("Connection completed");
-  console.log(await UserService.getUserFriends(1));
 
   socket.on("subscribeToChats", async (userId) => {
     const userSocketsIds = userSockets.get(userId) ?? [];
@@ -88,7 +87,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("sendMessage", async (message) => {
-    console.log("Mensaje recibido!");
     const receivers = await UserService.getUserIdsByChat(message.chat);
     receivers.forEach((receiver) => {
       const receiverSocketIds = userSockets.get(receiver.id_user) ?? [];

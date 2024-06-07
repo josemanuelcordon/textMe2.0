@@ -94,9 +94,13 @@ const ChatList = ({
                 <section className="chat-info--section">
                   <h4>{chatToList.name}</h4>
                   <p>{chatToList.lastMessage && chatToList.lastMessage}</p>
-                  <div className="unread-messages--icon">
-                    {chatToList.unreadMessages}
-                  </div>
+                  <section className="chat-info">
+                    <div className="unread-messages--icon">
+                      {chatToList.unreadMessages}
+                    </div>
+                    <p>{chatToList.lastMessageDate}</p>
+                  </section>
+
                   {chatToList.group_chat && (
                     <Tag className="group-tag" type="green">
                       Grupo
@@ -127,9 +131,12 @@ const ChatList = ({
                 <section className="chat-info--section">
                   <h4>{chatToList.name}</h4>
                   <p>{chatToList.lastMessage && chatToList.lastMessage}</p>
-                  <div className="unread-messages--icon">
-                    {chatToList.unreadMessages}
-                  </div>
+                  <section className="chat-info">
+                    <div className="unread-messages--icon">
+                      {chatToList.unreadMessages}
+                    </div>
+                    <p>{chatToList.lastMessageDate}</p>
+                  </section>
                   {chatToList.group_chat && (
                     <Tag className="group-tag" type="green">
                       Grupo

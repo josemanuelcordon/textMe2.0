@@ -208,6 +208,7 @@ const Chat = ({
               } message`}
             >
               {messageToList.content}
+              <span className="message-date">{messageToList.date}</span>
             </p>
           </li>
         ))}

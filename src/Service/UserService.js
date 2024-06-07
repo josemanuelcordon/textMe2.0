@@ -5,7 +5,7 @@ const getAllUsers = async () => {
 };
 
 const getUsersByUsername = async (username) => {
-  return await UserRepository.getUsersByUsername(username);
+  return await UserRepository.getUsersByUsername(username, estrict);
 };
 
 const getUserIdsByChat = async (chatId) => {

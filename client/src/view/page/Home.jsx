@@ -13,6 +13,7 @@ import {
   Button,
 } from "@carbon/react";
 import { Filter, Menu } from "@carbon/icons-react";
+import date from "date-and-time";
 
 import messageService from "../../service/messageService";
 import ModalContainer from "../components/ModalContainer";
@@ -93,7 +94,8 @@ const Home = () => {
       }
 
       chatToUpdate.lastMessage = message.content;
-
+      let now = new Date();
+      chatToUpdate.lastMessageDate = date.format(now, "YYYY-MM-DD HH:mm");
       chatsUpdated.splice(chatIndex, 1);
       chatsUpdated.unshift(chatToUpdate);
 
