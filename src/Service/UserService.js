@@ -24,8 +24,8 @@ const getChatParticipantsExceptMe = async (chatId, userId) => {
   return await UserRepository.getChatParticipantsExceptMe(chatId, userId);
 };
 
-const createUser = async (username, email, password) => {
-  return await UserRepository.createUser(username, email, password);
+const createUser = async (userEntity) => {
+  return await UserRepository.createUser(userEntity);
 };
 
 const enableAccount = async (userId) => {

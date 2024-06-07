@@ -9,7 +9,7 @@ const saveMessage = async (message) => {
   const selectQuery = "SELECT * FROM `message` WHERE `id` = ?";
   try {
     let now = new Date();
-    now = date.format(now, "YYYY-MM-DD HH:mm:ss", {});
+    now = date.format(now, "YYYY-MM-DD HH:mm:ss");
 
     const dbConnection = await mysql.connect();
     const [insertResult] = await dbConnection.query(insertQuery, [

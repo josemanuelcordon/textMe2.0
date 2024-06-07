@@ -1,3 +1,4 @@
+import { User } from "../Model/User.js";
 import UserService from "../Service/UserService.js";
 
 const getAllUsers = async (req, res) => {
@@ -22,8 +23,11 @@ const getUserFriends = async (req, res) => {
 
 const createUser = async (req, res) => {
   const { username, email, password } = req.body;
-
-  const user = await UserService.createUser(username, email, password);
+  const userEntity = new User();
+  userEntity.username = username;
+  userEntity.email = email;
+  userEntity.password = password;
+  const user = await UserService.createUser(userEntity);
 
   if (user) {
     res.status(201).json(user);
