@@ -33,7 +33,7 @@ $ cd ..
 4. Creación de carpetas
    La carpeta /uploads solo debe contener un archivo default.png junto con un .gitkeep
 
-La carpeta /writable/db_data debe estar vacía y con permisos sobre otros usarios, para ello ejecutaremos el siguiente comando:
+La carpeta /writable/db_data debe estar vacía (si no existe la creamos) y con permisos sobre otros usarios, para ello ejecutaremos el siguiente comando:
 
 ```bash
 $ sudo chmod 777 -R writable/db_data
