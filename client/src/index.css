@@ -99,6 +99,7 @@ body {
   right: 0;
   font-size: 0.6rem;
   text-align: end;
+  width: 85px;
 }
 
 .cancel-button {

@@ -1,5 +1,4 @@
 import mysql from "./db.js";
-import date from "date-and-time";
 
 import MessageMapper from "../mapper/MessageMapper.js";
 
@@ -8,14 +7,11 @@ const saveMessage = async (message) => {
     "INSERT INTO `message` (`sender`, `chat`, `date`, `content`) VALUES (?, ?, ?, ?)";
   const selectQuery = "SELECT * FROM `message` WHERE `id` = ?";
   try {
-    let now = new Date();
-    now = date.format(now, "YYYY-MM-DD HH:mm:ss");
-
     const dbConnection = await mysql.connect();
     const [insertResult] = await dbConnection.query(insertQuery, [
       message.sender,
       message.chat,
-      now,
+      message.date,
       message.content,
     ]);
     const insertId = insertResult.insertId;

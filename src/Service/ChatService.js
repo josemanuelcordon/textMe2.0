@@ -26,24 +26,20 @@ const getUserChats = async (userId) => {
   return chats;
 };
 
-const createChat = async (sender, receiver) => {
+const createChat = async (sender, receiver, date) => {
   const chat = await ChatRepository.createChat(sender, receiver);
   const userData = await UserService.getUserInfoByChat(chat.id, sender);
 
   chat.name = userData.username;
-  let now = new Date();
-  now = date.format(now, "YYYY-MM-DD HH:mm");
-  chat.lastMessageDate = now;
+  chat.lastMessageDate = date;
   chat.unreadMessages = 0;
   return chat;
 };
 
-const createGroupChat = async (creator, members, name) => {
+const createGroupChat = async (creator, members, name, date) => {
   const chat = await ChatRepository.createGroupChat(creator, members, name);
   const userData = await UserService.getUserInfoByChat(chat.id, creator);
-  let now = new Date();
-  now = date.format(now, "YYYY-MM-DD HH:mm");
-  chat.lastMessageDate = now;
+  chat.lastMessageDate = date;
   chat.unreadMessages = 0;
   chat.participants = userData.chatParticipants;
   return chat;

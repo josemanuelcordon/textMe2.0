@@ -12,6 +12,7 @@ import {
   ToggletipButton,
   ToggletipContent,
 } from "@carbon/react";
+import date from "date-and-time";
 import { SendFilled, Information, QX } from "@carbon/icons-react";
 import { useNotifications } from "../context/NotificationContext";
 import { Notification } from "../../domain/Notification";
@@ -90,10 +91,12 @@ const Chat = ({
     e.preventDefault();
     if (!message.content || message.content.trim() === "") return;
 
+    let messageDate = new Date();
+    messageDate = date.format(messageDate, "YYYY-MM-DD HH:mm");
     const messageToSend = {
       content: message.content,
       sender: user.id,
-      date: new Date(),
+      date: messageDate,
       chat: chat.id,
     };
 
