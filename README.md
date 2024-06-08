@@ -12,7 +12,7 @@ Para desplegar el proyecto haremos lo siguiente:
 
 ```bash
 $ git clone https://github.com/josemanuelcordon/textMe2.0.git
-cd textMe2.0
+$ cd textMe2.0
 ```
 
 2. Una vez dentro instalaremos las dependencias del proyecto
@@ -26,8 +26,8 @@ $ npm install
 3. Buildearemos el cliente
 
 ```bash
-    npm run build
-    cd ..
+$ npm run build
+$ cd ..
 ```
 
 4. Creación de carpetas
