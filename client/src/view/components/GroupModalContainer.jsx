@@ -96,8 +96,7 @@ const GroupModalContainer = ({
           }
         );
       } catch (error) {
-        console.error("Error al subir la imagen", error);
-        alert("Error al subir la imagen");
+        addNotification(new Notification("Error al subir la imagen", "error"));
       }
 
       setChats((prev) => [chat, ...prev]);

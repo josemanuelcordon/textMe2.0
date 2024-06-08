@@ -15,7 +15,6 @@ const getUserChats = async (userId) => {
       chat.name = userData.username;
     }
     chat.lastMessage = messageData.content;
-    console.log(messageData);
     if (messageData.date) {
       let messageDate = date.format(messageData.date, "YYYY-MM-DD HH:mm");
       chat.lastMessageDate = messageDate;
