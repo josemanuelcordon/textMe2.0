@@ -33,6 +33,15 @@ const getUsersByUsername = async (username) => {
   return userDtos.map((dto) => UserMapper.toModel(dto));
 };
 
+const getUsernameById = async (userId) => {
+  const query = "SELECT username FROM `users` WHERE `id` =?";
+  const dbConnection = await mysql.connect();
+
+  const [results, fields] = await dbConnection.query(query, [userId]);
+  await dbConnection.end();
+  return results[0].username;
+};
+
 const getUserIdsByChat = async (chatId) => {
   const query = "SELECT id_user FROM `chat_participants` WHERE `id_chat` = ?";
   const dbConnection = await mysql.connect();
@@ -164,6 +173,7 @@ export default {
   getAllUsers,
   getUser,
   getUsersByUsername,
+  getUsernameById,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,

@@ -1,4 +1,5 @@
 import { MessageRepository } from "../Repository/index.js";
+import UserService from "./UserService.js";
 
 const saveMessage = async (sender, content, date, chat) => {
   const message = {
@@ -8,7 +9,11 @@ const saveMessage = async (sender, content, date, chat) => {
     chat: chat,
   };
 
-  return await MessageRepository.saveMessage(message);
+  let messageResponse = await MessageRepository.saveMessage(message);
+  messageResponse.user.username = await UserService.getUsernameById(
+    message.sender
+  );
+  return messageResponse;
 };
 
 const getChatMessages = async (chatId) => {

@@ -8,6 +8,10 @@ const getUsersByUsername = async (username) => {
   return await UserRepository.getUsersByUsername(username);
 };
 
+const getUsernameById = async (userId) => {
+  return await UserRepository.getUsernameById(userId);
+};
+
 const getUserIdsByChat = async (chatId) => {
   return (await UserRepository.getUserIdsByChat(chatId)) ?? [];
 };
@@ -47,6 +51,7 @@ const disbanUser = async (userId) => {
 export default {
   getAllUsers,
   getUsersByUsername,
+  getUsernameById,
   getUserIdsByChat,
   getUserInfoByChat,
   getUserFriends,
