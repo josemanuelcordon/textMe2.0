@@ -95,7 +95,7 @@ const Home = () => {
 
       chatToUpdate.lastMessage = message.content;
       let now = new Date();
-      chatToUpdate.lastMessageDate = date.format(now, "YYYY-MM-DD HH:mm");
+      chatToUpdate.lastMessageDate = date.format(now, "YYYY-MM-DD HH:mm:ss");
       chatsUpdated.splice(chatIndex, 1);
       chatsUpdated.unshift(chatToUpdate);
 

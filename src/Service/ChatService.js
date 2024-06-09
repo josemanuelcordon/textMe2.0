@@ -16,7 +16,7 @@ const getUserChats = async (userId) => {
     }
     chat.lastMessage = messageData.content;
     if (messageData.date) {
-      let messageDate = date.format(messageData.date, "YYYY-MM-DD HH:mm");
+      let messageDate = date.format(messageData.date, "YYYY-MM-DD HH:mm:ss");
       chat.lastMessageDate = messageDate;
     }
     chat.unreadMessages = messageData.unreadMessages;

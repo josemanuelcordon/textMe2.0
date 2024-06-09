@@ -92,7 +92,7 @@ const Chat = ({
     if (!message.content || message.content.trim() === "") return;
 
     let messageDate = new Date();
-    messageDate = date.format(messageDate, "YYYY-MM-DD HH:mm");
+    messageDate = date.format(messageDate, "YYYY-MM-DD HH:mm:ss");
     const messageToSend = {
       content: message.content,
       sender: user.id,

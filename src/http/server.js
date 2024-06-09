@@ -87,7 +87,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("sendMessage", async (message) => {
-    console.log(message);
     const receivers = await UserService.getUserIdsByChat(message.chat);
     receivers.forEach((receiver) => {
       const receiverSocketIds = userSockets.get(receiver.id_user) ?? [];
